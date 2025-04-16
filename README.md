@@ -1,2 +1,2 @@
-# sakte_results
+# skate_results
 Competition Results Display
