@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-z)w-7y8@5h(i950!b=svj623_f)ea8#w6e&74@%_v)j**o&c*3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['skate-results-app.azurewebsites.net', '127.0.0.1', 'mayskateresults.scwny.org']
 
 
 # Application definition
