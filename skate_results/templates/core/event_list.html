@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}All Events{% endblock %}
+{% block content %}
+<h1>All Events</h1>
+<ul>
+  {% for event in events %}
+    <li>
+      {% if event.competition %}{{ event.competition.name }} — {% endif %}
+      {{ event.date }} | {{ event.eventNumber }}: {{ event.name }}
+      (<a href="{% url 'event_schedule' event.pk %}">
+        {% if event.status=='finished' %}Results{% else %}Schedule{% endif %}
+      </a>)
+    </li>
+  {% empty %}
+    <li>No events found.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
