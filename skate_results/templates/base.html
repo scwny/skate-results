@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Skate Results{% endblock %}</title>
+</head>
+<body>
+  <nav><a href="{% url 'event_list' %}">All Events</a></nav>
+  <hr>
+  {% block content %}{% endblock %}
+</body>
+</html>

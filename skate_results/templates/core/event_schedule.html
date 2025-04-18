@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Schedule for {{ event.name }}{% endblock %}
+{% block content %}
+<h1>
+  {% if event.status == 'finished' %}Results for{% else %}Schedule for{% endif %}
+  {{ event.name }} on {{ event.date }}
+</h1>
+
+{% if event.status == 'finished' and event.result_image %}
+  <p><img src="{{ event.result_image.url }}" alt="Results sheet"></p>
+{% endif %}
+
+<ol>
+{% for skater in skaters %}
+  <li>{{ skater.skater_name }}</li>
+{% empty %}
+  <li>No skaters scheduled.</li>
+{% endfor %}
+</ol>
+{% endblock %}
