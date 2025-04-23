@@ -90,12 +90,6 @@ DATABASES = {
         'PASSWORD': os.getenv('SQL_PASSWORD'),
         'HOST': os.getenv('SQL_HOST'),
         'PORT': os.getenv('SQL_PORT'),
-        'OPTIONS': {
-                'extra_params': (
-                'TrustServerCertificate=yes;'
-                'Encrypt=yes'
-            ),
-        }
     }
 }
 
