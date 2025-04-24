@@ -1,1 +1,1 @@
-web: gunicorn yourprojectname.wsgi:skate_results --bind 0.0.0.0:$PORT
+web: gunicorn yourprojectname.wsgi:skate_results --bind 0.0.0.0:443
