@@ -14,7 +14,7 @@ from pathlib import Path
 from decouple import Config, RepositoryEnv
 
 # Load .env file explicitly if needed
-config = Config(repository=RepositoryEnv('.env'))
+#config = Config(repository=RepositoryEnv('.env'))
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -30,7 +30,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['skate-results-app.azurewebsites.net', '127.0.0.1', 'mayskateresults.scwny.org']
+ALLOWED_HOSTS = ['skate-results-app.azurewebsites.net', '127.0.0.1', 'mayskateresults.scwny.org',"elasticbeanstalk-us-east-1-122610494579.s3.amazonaws.com/"]
 
 
 # Application definition
