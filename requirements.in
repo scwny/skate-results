@@ -1,0 +1,25 @@
+# Core web framework
+Django>=4.2,<5.0
+
+# PostgreSQL database driver
+psycopg2-binary>=2.9
+
+# AWS SDK for Python
+boto3>=1.26
+
+# Django S3 support (requires boto3 and botocore)
+django-storages>=1.13
+
+# Gunicorn for production (WSGI server)
+gunicorn>=20.1
+
+# Useful utilities
+python-decouple>=3.6  # For managing environment variables
+
+# Optional: Use whitenoise if you're serving static files from EB directly
+whitenoise>=6.5
+
+# Pin pip-tools if you're using it in your deployment pipeline
+pip-tools>=7.0
+
+Pillow
