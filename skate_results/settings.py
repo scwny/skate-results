@@ -30,7 +30,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['skate-results-app.azurewebsites.net', '127.0.0.1', 'mayskateresults.scwny.org',"*.elasticbeanstalk.com"]
+ALLOWED_HOSTS = ['skate-results-app.azurewebsites.net', '127.0.0.1', 'mayskateresults.scwny.org',".elasticbeanstalk.com"]
 
 
 # Application definition
