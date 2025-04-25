@@ -46,6 +46,37 @@
   </div>
 </div>
 
+{% if filters.event_name or filters.skater_name or filters.club_name %}
+  <div class="mb-3 d-flex flex-wrap align-items-center gap-2">
+
+    {% if filters.event_name %}
+      <a href="?{% if filters.skater_name %}skater_name={{ filters.skater_name }}&{% endif %}{% if filters.club_name %}club_name={{ filters.club_name }}&{% endif %}"
+         class="badge bg-primary text-decoration-none">
+        Event: {{ filters.event_name }} ✕
+      </a>
+    {% endif %}
+
+    {% if filters.skater_name %}
+      <a href="?{% if filters.event_name %}event_name={{ filters.event_name }}&{% endif %}{% if filters.club_name %}club_name={{ filters.club_name }}&{% endif %}"
+         class="badge bg-primary text-decoration-none">
+        Skater: {{ filters.skater_name }} ✕
+      </a>
+    {% endif %}
+
+    {% if filters.club_name %}
+      <a href="?{% if filters.event_name %}event_name={{ filters.event_name }}&{% endif %}{% if filters.skater_name %}skater_name={{ filters.skater_name }}&{% endif %}"
+         class="badge bg-primary text-decoration-none">
+        Club: {{ filters.club_name }} ✕
+      </a>
+    {% endif %}
+
+    <!-- Clear All Button -->
+    <a href="{% url 'competition_events' competition.pk %}" class="btn btn-sm btn-outline-secondary ms-auto">
+      Clear All Filters
+    </a>
+  </div>
+{% endif %}
+
 <!-- Event List -->
 <ul class="list-group">
   {% for event in events %}

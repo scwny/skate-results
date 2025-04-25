@@ -4,6 +4,8 @@ from django.views.generic import ListView, DetailView
 from .models import Competition, Event, ScheduledSkater, Skater, Club
 from django.db.models import Q
 import logging
+from django.shortcuts import get_object_or_404
+
 logger = logging.getLogger(__name__)
 
 # Create your views here.
@@ -64,8 +66,14 @@ class CompetitionEventListView(ListView):
     paginate_by         = 25
 
     def get_queryset(self):
-        qs = Event.objects.filter(competition_id=self.kwargs['pk']).distinct()
-
+        qs = (
+            Event.objects
+            .filter(competition_id=self.kwargs['pk'])
+            .prefetch_related(
+            'event__skater__club'
+            )
+            .distinct()
+        )
         # Read GET parameters
         event_name = self.request.GET.get('event_name', '')
         skater_name = self.request.GET.get('skater_name', '')
@@ -91,7 +99,7 @@ class CompetitionEventListView(ListView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx['competition'] = Competition.objects.get(pk=self.kwargs['pk'])
+        ctx['competition'] = get_object_or_404(Competition, pk=self.kwargs['pk'])
         ctx['filters'] = {
             'event_name': self.request.GET.get('event_name', ''),
             'skater_name': self.request.GET.get('skater_name', ''),
