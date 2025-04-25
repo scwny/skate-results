@@ -10,4 +10,11 @@
     <li class="list-group-item">No skaters scheduled.</li>
   {% endfor %}
 </ul>
+
+<div class="mb-3" style='margin-top: 25px;'>
+  <a href="{% url 'competition_events' event.competition.pk %}" class="btn btn-secondary">
+    &larr; Back to Events
+  </a>
+</div>
+
 {% endblock %}

@@ -13,14 +13,21 @@
   <div class="alert alert-info">
     Results aren’t posted yet. Please check back later!
   </div>
+
+  <ol class="list-group list-group-numbered mt-3">
+    <h3>Skating Order:</h3>
+    {% for ss in scheduled_skaters %}
+      <li class="list-group-item">{{ ss.skater }}</li>
+    {% empty %}
+      <li class="list-group-item">No skaters scheduled.</li>
+    {% endfor %}
+  </ol>
 {% endif %}
 
-<ol class="list-group list-group-numbered mt-3">
-  <h3>Skating Order:</h3>
-  {% for ss in scheduled_skaters %}
-    <li class="list-group-item">{{ ss.skater }}</li>
-  {% empty %}
-    <li class="list-group-item">No skaters scheduled.</li>
-  {% endfor %}
-</ol>
+<div class="mb-3" style='margin-top: 25px;'>
+  <a href="{% url 'competition_events' event.competition.pk %}" class="btn btn-secondary">
+    &larr; Back to Events
+  </a>
+</div>
+
 {% endblock %}
