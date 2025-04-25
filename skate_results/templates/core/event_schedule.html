@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% block title %}Schedule for {{ event }}{% endblock %}
+{% block competition_name %}{{ event }}{% endblock %}
 {% block content %}
-<h1>Schedule: {{ event }}</h1>
-<ol class="list-group list-group-numbered">
-  {% for ss in skaters %}
+<ul class="list-group">
+  <h3>Skating Order:</h3>
+  {% for ss in scheduled_skaters %}
     <li class="list-group-item">{{ ss.orderNumber }}. {{ ss.skater }}</li>
   {% empty %}
     <li class="list-group-item">No skaters scheduled.</li>
   {% endfor %}
-</ol>
+</ul>
 {% endblock %}

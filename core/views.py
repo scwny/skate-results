@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from decouple import config
 from django.views.generic import ListView, DetailView
-from .models import Competition, Event
+from .models import Competition, Event, ScheduledSkater
 
 # Create your views here.
 from django.http import HttpResponse
@@ -27,7 +27,11 @@ class EventScheduleView(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         # related_name for ScheduledSkater → 'event'
-        ctx['scheduled_skaters'] = self.object.event.all()
+        ctx['scheduled_skaters'] = (
+            ScheduledSkater.objects
+            .filter(event=self.object)
+            .order_by('orderNumber')
+        )
         return ctx
 
 
@@ -39,7 +43,12 @@ class EventResultsView(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         # always show schedule
-        ctx['scheduled_skaters'] = self.object.event.all()
+        ctx['scheduled_skaters'] = (
+            ScheduledSkater.objects
+            .filter(event=self.object)
+            .order_by('orderNumber')
+        )
+
         # only show image if finished and has one
         ctx['has_results'] = bool(self.object.status == 'finished' and self.object.result_image)
         return ctx

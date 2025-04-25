@@ -2,14 +2,11 @@
 {% block title %}
   {% if has_results %}Results for{% else %}Schedule for{% endif %} {{ event }}
 {% endblock %}
-
+{% block competition_name %}{{ event }}{% endblock %}
 {% block content %}
-<h1>
-  {% if has_results %}Results{% else %}Schedule (Results Pending){% endif %}: {{ event }}
-</h1>
 
 {% if has_results %}
-  <div class="mb-4">
+  <div class="d-flex justify-content-center mb-4">
     <img src="{{ event.result_image.url }}" class="img-fluid" alt="Results sheet">
   </div>
 {% else %}
@@ -19,8 +16,9 @@
 {% endif %}
 
 <ol class="list-group list-group-numbered mt-3">
-  {% for ss in skaters %}
-    <li class="list-group-item">{{ ss.orderNumber }}. {{ ss.skater }}</li>
+  <h3>Skating Order:</h3>
+  {% for ss in scheduled_skaters %}
+    <li class="list-group-item">{{ ss.skater }}</li>
   {% empty %}
     <li class="list-group-item">No skaters scheduled.</li>
   {% endfor %}
