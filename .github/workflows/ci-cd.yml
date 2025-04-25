@@ -56,7 +56,7 @@ jobs:
         run: pip install awsebcli
 
       - name: Initialize Elastic Beanstalk
-        run: eb init skate-results --platform python-3.13 --region us-east-1 --profile default
+        run: eb init skate-results -p python-3.13 -r us-east-1 --interactive=false
 
       - name: Deploy to Elastic Beanstalk
-        run: eb deploy skate-results-env --staged
+        run: eb deploy skate-results-env
