@@ -17,7 +17,7 @@ class EventListView(ListView):
     model               = Event
     context_object_name = 'events'
     template_name       = 'core/event_list.html'
-    paginate_by         = 25
+    paginate_by         = 500
 
 class EventScheduleView(DetailView):
     model               = Event
@@ -28,4 +28,18 @@ class EventScheduleView(DetailView):
         ctx = super().get_context_data(**kwargs)
         # related_name for ScheduledSkater → 'event'
         ctx['scheduled_skaters'] = self.object.event.all()
+        return ctx
+
+
+class EventResultsView(DetailView):
+    model               = Event
+    context_object_name = 'event'
+    template_name       = 'core/event_results.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        # always show schedule
+        ctx['scheduled_skaters'] = self.object.event.all()
+        # only show image if finished and has one
+        ctx['has_results'] = bool(self.object.status == 'finished' and self.object.result_image)
         return ctx

@@ -1,18 +1,30 @@
 {% extends 'base.html' %}
-{% block title %}All Events{% endblock %}
+{% block title %}All Events - May Skate{% endblock %}
+{% block competition_name %}34th Annual Spring Skate Festival{% endblock %}
 {% block content %}
-<h1>All Events</h1>
-<ul>
+
+<ul class="list-group">
   {% for event in events %}
-    <li>
-      {% if event.competition %}{{ event.competition.name }} — {% endif %}
-      {{ event.date }} | {{ event.eventNumber }}: {{ event.name }}
-      (<a href="{% url 'event_schedule' event.pk %}">
-        {% if event.status == 'finished' %}Results{% else %}Schedule{% endif %}
-      </a>)
-    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div>{{ event.eventNumber }} - {{ event.name }}</div>
+      <div>
+        <a href="{% url 'event_schedule' event.pk %}" class="btn btn-primary btn-sm me-2">
+          Schedule
+        </a>
+        <a href="{% url 'event_results' event.pk %}"  class="btn btn-sm
+        {% if event.status == 'finished' and event.result_image %}
+          btn-success
+        {% else %}
+          btn-outline-danger
+        {% endif %}">
+          Results
+        </a>
+      </div>
+    
   {% empty %}
-    <li>No events found.</li>
+    <li class="list-group-item">No events scheduled.</li>
   {% endfor %}
 </ul>
+
+
 {% endblock %}
