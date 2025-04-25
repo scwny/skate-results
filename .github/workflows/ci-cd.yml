@@ -35,9 +35,6 @@ jobs:
           pip install pip-tools
           pip-sync requirements.txt
 
-      - name: Run migrations
-        run: python manage.py migrate --no-input
-
       - name: Run tests
         run: python manage.py test
 
