@@ -51,7 +51,7 @@ def backwards(apps, schema_editor):
 
     # Remove the event #2 and its scheduled skaters
     try:
-        comp = Competition.objects.get(name="May Skate")
+        comp = Competition.objects.get(name="Test Competition")
         event2 = Event.objects.get(competition=comp, eventNumber=2)
     except (Competition.DoesNotExist, Event.DoesNotExist):
         return
