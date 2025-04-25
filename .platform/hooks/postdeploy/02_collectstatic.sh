@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
-# 1) Load the Elastic Beanstalk environment variables
-#    (creates DB_HOST, SECRET_KEY, etc. for this shell)
+# 1 Load the Elastic Beanstalk environment variables
+# creates DB_HOST, SECRET_KEY, etc. for this shell
 if [ -f /opt/elasticbeanstalk/deployment/env ]; then
   source /opt/elasticbeanstalk/deployment/env
 fi
 
-# 2) Run collectstatic as the 'webapp' user so permissions are correct
+# 2 Run collectstatic as the 'webapp' user so permissions are correct
 sudo -u webapp -E bash -c '
   source /var/app/venv/*/bin/activate
   cd /var/app/current
