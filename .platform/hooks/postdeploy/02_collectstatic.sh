@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -e
 
+# Turn OFF history expansion so ! in SECRET_KEY (and others) is literal
+set +H          # or:  set +o histexpand
+
+
 # 1 Load the Elastic Beanstalk environment variables
 # creates DB_HOST, SECRET_KEY, etc. for this shell
 if [ -f /opt/elasticbeanstalk/deployment/env ]; then
