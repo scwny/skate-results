@@ -1,5 +1,6 @@
-#!/bin/bash
-# Runs every time EB successfully deploys a new application version.
-#source /var/app/venv/*/bin/activate        # activates the virtual-env EB created
-#cd /var/app/current                         # the app code directory
-#python manage.py migrate --noinput
+#!/usr/bin/env bash
+sudo -u webapp -i bash <<'INNER'
+source /var/app/venv/*/bin/activate
+cd /var/app/current
+python manage.py collectstatic --noinput
+INNER
