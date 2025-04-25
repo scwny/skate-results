@@ -3,18 +3,18 @@
 {% block content %}
 <h1>
   {% if event.status == 'finished' %}Results for{% else %}Schedule for{% endif %}
-  {{ event.name }} on {{ event.date }}
+  {{ event.name }}
 </h1>
 
 {% if event.status == 'finished' and event.result_image %}
   <p><img src="{{ event.result_image.url }}" alt="Results sheet"></p>
-{% endif %}
-
+{% else %}
 <ol>
-{% for skater in skaters %}
-  <li>{{ skater.skater_name }}</li>
+{% for skater in scheduled_skaters %}
+  <ul>{{ skater }}</ul>
 {% empty %}
-  <li>No skaters scheduled.</li>
+  <ul>No skaters scheduled.</ul>
 {% endfor %}
 </ol>
+{% endif %}
 {% endblock %}

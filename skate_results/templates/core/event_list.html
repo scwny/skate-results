@@ -8,7 +8,7 @@
       {% if event.competition %}{{ event.competition.name }} — {% endif %}
       {{ event.date }} | {{ event.eventNumber }}: {{ event.name }}
       (<a href="{% url 'event_schedule' event.pk %}">
-        {% if event.status=='finished' %}Results{% else %}Schedule{% endif %}
+        {% if event.status == 'finished' %}Results{% else %}Schedule{% endif %}
       </a>)
     </li>
   {% empty %}

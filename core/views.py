@@ -1,5 +1,5 @@
 from django.shortcuts import render
-import os
+from decouple import config
 from django.views.generic import ListView, DetailView
 from .models import Event
 
@@ -7,7 +7,7 @@ from .models import Event
 from django.http import HttpResponse
 
 def ping(request):
-    return HttpResponse(f"pong!")
+    return HttpResponse(f"pong! {config('AWS_ACCESS_KEY_ID')}")
 
 
 def competitions(request):
@@ -27,5 +27,5 @@ class EventScheduleView(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
         # related_name for ScheduledSkater → 'event'
-        ctx['scheduled'] = self.object.event.all()
+        ctx['scheduled_skaters'] = self.object.event.all()
         return ctx
