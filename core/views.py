@@ -105,4 +105,8 @@ class CompetitionEventListView(ListView):
             'skater_name': self.request.GET.get('skater_name', ''),
             'club_name': self.request.GET.get('club_name', ''),
         }
+        # Pass all clubs so we can build a dropdown or datalist
+        from .models import Club
+        ctx['clubs'] = Club.objects.order_by('name').values_list('name', flat=True)
+
         return ctx
