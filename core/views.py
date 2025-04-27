@@ -5,6 +5,8 @@ from .models import Competition, Event, ScheduledSkater, Skater, Club
 from django.db.models import Q
 import logging
 from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+
 
 logger = logging.getLogger(__name__)
 
@@ -110,3 +112,15 @@ class CompetitionEventListView(ListView):
         ctx['clubs'] = Club.objects.order_by('name').values_list('name', flat=True)
 
         return ctx
+    
+    
+def competition_event_statuses(request, pk):
+    events = Event.objects.filter(competition_id=pk)
+    data = []
+    for e in events:
+        data.append({
+            'id': e.pk,
+            'status': e.status,
+            'has_results': bool(e.status == 'finished' and e.result_image),
+        })
+    return JsonResponse({'events': data})

@@ -86,28 +86,34 @@
 <!-- Event List -->
 <ul class="list-group">
   {% for event in events %}
-    <li class="list-group-item d-flex justify-content-between align-items-center">
-      <div>{{ event.eventNumber }} - {{ event.name }}</div>
-      <div>
-      {% if event.status != 'finished' %}
-        <a href="{% url 'event_schedule' event.pk %}" class="btn btn-primary btn-sm btn-equal me-2">
-          Schedule
-        </a>
-      {% else %}
-         <a href="{% url 'event_results' event.pk %}"  class="btn btn-sm btn-equal 
-         {% if event.status == 'finished' and event.result_image %}
-           btn-success
-         {% else %}
-          btn-outline-danger
-         {% endif %} me-2">
-           Results
-         </a>
-      {% endif %}
-    </div>
+    <li class="
+           list-group-item
+           d-flex justify-content-between align-items-center
+         "
+         data-event-id="{{ event.pk }}"
+         data-schedule-url="{% url 'event_schedule' event.pk %}"
+         data-results-url="{% url 'event_results' event.pk %}"
+    >
+      <div>{{ event.eventNumber }} – {{ event.name }}</div>
+      <div class="event-action">
+        {% if event.status != 'finished' %}
+          <a href="{% url 'event_schedule' event.pk %}"
+             class="btn btn-primary btn-sm btn-equal">
+            Schedule
+          </a>
+        {% else %}
+          <a href="{% url 'event_results' event.pk %}"
+             class="btn btn-success btn-sm btn-equal">
+            Results
+          </a>
+        {% endif %}
+      </div>
+    </li>
   {% empty %}
     <li class="list-group-item">No events scheduled.</li>
   {% endfor %}
 </ul>
+
 
 <div class="mb-3" style='margin-top: 25px;'>
   <a href="{% url 'competition_list' %}" class="btn btn-secondary">
@@ -115,4 +121,52 @@
   </a>
 </div>
 
+
+<script>
+  document.addEventListener('DOMContentLoaded', function(){
+    const compPk = {{ competition.pk }};
+    const statusUrl = "{% url 'competition_event_statuses' competition.pk %}";
+  
+    function refreshButtons(){
+      fetch(statusUrl)
+        .then(r => r.json())
+        .then(json => {
+          json.events.forEach(evt => {
+            const li = document.querySelector(`li[data-event-id="${evt.id}"]`);
+            if (!li) return;
+            const actionDiv = li.querySelector('.event-action');
+            const scheduleUrl = li.dataset.scheduleUrl;
+            const resultsUrl  = li.dataset.resultsUrl;
+  
+            // Build new button HTML
+            let html;
+            if (evt.status !== 'finished') {
+              html = `<a href="${scheduleUrl}"
+                         class="btn btn-primary btn-sm btn-equal">
+                        Schedule
+                      </a>`;
+            } else if (evt.has_results) {
+              html = `<a href="${resultsUrl}"
+                         class="btn btn-success btn-sm btn-equal">
+                        Results
+                      </a>`;
+            } else {
+              html = `<a href="${resultsUrl}"
+                         class="btn btn-outline-danger btn-sm btn-equal">
+                        Results
+                      </a>`;
+            }
+            actionDiv.innerHTML = html;
+          });
+        })
+        .catch(console.error);
+    }
+  
+    // Initial load
+    refreshButtons();
+    // Poll every 30 seconds
+    setInterval(refreshButtons, 30000);
+  });
+  </script>
+  
 {% endblock %}

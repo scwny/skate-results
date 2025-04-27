@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CompetitionListView, CompetitionEventListView, EventScheduleView, ping, EventResultsView
+from .views import CompetitionListView, CompetitionEventListView, EventScheduleView, ping, EventResultsView, competition_event_statuses
 
 
 urlpatterns = [
@@ -16,4 +16,7 @@ urlpatterns = [
     
     # 4) Event Results
     path('event/<int:pk>/results/', EventResultsView.as_view(),  name='event_results'),
+
+    # 5) Event Results
+    path('competition/<int:pk>/statuses/',competition_event_statuses,name='competition_event_statuses'),
 ]
