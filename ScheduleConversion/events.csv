@@ -1,0 +1,152 @@
+id,competition_id,eventNumber,name,date,rink,time
+1,1,1,Free Skate - Excel Pre-Preliminary - A,1900-05-17,1,08:00:00
+2,1,2,Free Skate - Excel Pre-Preliminary - B,1900-05-17,1,08:00:00
+3,1,3,Free Skate - Excel Pre-Preliminary - C,1900-05-17,1,08:30:00
+4,1,4,Free Skate - Excel Pre-Preliminary - D,1900-05-17,1,08:30:00
+5,1,5,Free Skate - Excel Preliminary - A,1900-05-17,1,09:00:00
+6,1,6,Free Skate - Excel Preliminary - B,1900-05-17,1,09:25:00
+7,1,7,Free Skate - Excel Preliminary - C,1900-05-17,1,09:50:00
+8,1,8,Free Skate - Excel Preliminary - D,1900-05-17,1,10:10:00
+9,1,9,Free Skate - Excel Preliminary,1900-05-17,1,10:10:00
+10,1,10,Free Skate - Excel Preliminary Plus - A,1900-05-17,1,10:35:00
+11,1,11,Free Skate - Excel Preliminary Plus - B,1900-05-17,1,10:35:00
+12,1,12,Free Skate - Excel Preliminary Plus - C,1900-05-17,1,11:25:00
+13,1,13,Free Skate - Excel Preliminary Plus - D,1900-05-17,1,11:25:00
+14,1,14,Free Skate - Excel Preliminary Plus - E,1900-05-17,1,11:55:00
+16,1,16,Free Skate - Preliminary,1900-05-17,1,12:15:00
+17,1,17,Free Skate - Excel Senior,1900-05-17,1,12:35:00
+18,1,18,Free Skate - Excel Senior,1900-05-17,1,12:35:00
+19,1,19,Free Skate - Excel Junior,1900-05-17,1,12:50:00
+20,1,20,Free Skate - Excel Novice,1900-05-17,1,12:50:00
+21,1,21,Free Skate - Excel Intermediate Plus,1900-05-17,1,13:10:00
+22,1,22,Free Skate - Excel Intermediate Plus,1900-05-17,1,13:10:00
+23,1,23,Free Skate - Excel Intermediate,1900-05-17,1,13:40:00
+24,1,24,Free Skate - Excel Juvenile Plus,1900-05-17,1,14:05:00
+25,1,25,Free Skate - Excel Juvenile Plus,1900-05-17,1,14:05:00
+26,1,26,Free Skate - Excel Juvenile,1900-05-17,1,14:45:00
+27,1,27,Free Skate - Pre-Juvenile,1900-05-17,1,14:45:00
+28,1,28,Free Skate - Excel Pre-Juvenile Plus - A,1900-05-17,1,15:20:00
+29,1,29,Free Skate - Excel Pre-Juvenile Plus - B,1900-05-17,1,15:20:00
+30,1,30,Free Skate - Excel Pre-Juvenile Plus - C,1900-05-17,1,15:55:00
+31,1,31,Free Skate - Excel Pre-Juvenile Plus - D,1900-05-17,1,15:55:00
+32,1,32,Adult Free Skate - Masters Int / Nov,1900-05-17,1,16:30:00
+33,1,33,Adult Free Skate - Adult High Beginner,1900-05-17,1,16:30:00
+34,1,34,Adult Free Skate - Adult Pre-Bronze,1900-05-17,1,16:50:00
+35,1,35,Adult Free Skate - Adult Silver,1900-05-17,1,16:50:00
+36,1,36,Adult Free Skate - Adult Bronze - A,1900-05-17,1,17:10:00
+37,1,37,Adult Free Skate - Adult Bronze - B,1900-05-17,1,17:10:00
+38,1,38,Solo Pattern Dance - Preliminary - Dutch Waltz - A,1900-05-17,1,17:35:00
+39,1,39,Solo Pattern Dance - Preliminary - Dutch Waltz - B,1900-05-17,1,17:50:00
+40,1,40,Solo Pattern Dance - Preliminary - Dutch Waltz - C,1900-05-17,1,18:00:00
+41,1,41,Solo Pattern Dance - International - Cha Cha Congelado,1900-05-17,1,18:25:00
+42,1,42,Solo Pattern Dance - Gold - Viennese Waltz,1900-05-17,1,18:35:00
+43,1,43,Adult Solo Pattern Dance - Adult Silver,1900-05-17,1,18:45:00
+44,1,44,Adult Solo Pattern Dance - Adult Bronze,1900-05-17,1,18:50:00
+45,1,45,Solo Pattern Dance - Pre-Gold - Blues,1900-05-17,1,18:55:00
+46,1,46,Solo Pattern Dance - Silver - American Waltz,1900-05-17,1,19:05:00
+47,1,47,Solo Pattern Dance - Pre-Silver - Foxtrot - A,1900-05-17,1,19:15:00
+48,1,48,Solo Pattern Dance - Pre-Silver - Foxtrot - B,1900-05-17,1,19:25:00
+49,1,49,Solo Pattern Dance - Bronze - Willow Waltz - A,1900-05-17,1,19:35:00
+50,1,50,Solo Pattern Dance - Bronze - Willow Waltz - B,1900-05-17,1,19:45:00
+51,1,51,Solo Pattern Dance - Pre-Bronze - Tango Fiesta - A,1900-05-17,1,19:55:00
+52,1,52,Solo Pattern Dance - Pre-Bronze - Tango Fiesta - B,1900-05-17,1,20:05:00
+53,1,53,Solo Pattern Dance - Pre-Bronze - Tango Fiesta - C,1900-05-17,1,20:15:00
+54,1,54,Solo Pattern Dance - Pre-Bronze - Tango Fiesta - D,1900-05-17,1,20:25:00
+55,1,55,Program (w/music) - Aspire 4 - A,1900-05-18,1,08:00:00
+56,1,56,Program (w/music) - Aspire 4 - B,1900-05-18,1,08:00:00
+57,1,57,Program (w/music) - Aspire 4 - C,1900-05-18,1,08:30:00
+58,1,58,Program (w/music) - Aspire 4 - D,1900-05-18,1,08:30:00
+59,1,59,Program (w/music) - Aspire 4,1900-05-18,1,08:30:00
+60,1,60,Program (w/music) - Aspire 3 - A,1900-05-18,1,09:00:00
+61,1,61,Program (w/music) - Aspire 3 - B,1900-05-18,1,09:00:00
+62,1,62,Program (w/music) - Aspire 3 - C,1900-05-18,1,09:30:00
+63,1,63,Program (w/music) - Aspire 3 - D,1900-05-18,1,09:30:00
+64,1,64,Program (w/music) - Aspire 3 - E,1900-05-18,1,10:05:00
+65,1,65,Program (w/music) - Aspire 3 - F,1900-05-18,1,10:05:00
+66,1,66,Program (w/music) - Aspire 3,1900-05-18,1,10:35:00
+67,1,67,Program (w/music) - Aspire 2 - A,1900-05-18,1,10:35:00
+68,1,68,Program (w/music) - Aspire 2 - B,1900-05-18,1,11:05:00
+69,1,69,Program (w/music) - Aspire 2 - C,1900-05-18,1,11:05:00
+70,1,70,Program (w/music) - Aspire 2 - D,1900-05-18,1,11:55:00
+71,1,71,Program (w/music) - Aspire 2 - E,1900-05-18,1,11:55:00
+72,1,72,Program (w/music) - Aspire 2 - F,1900-05-18,1,12:25:00
+73,1,73,Program (w/music) - Aspire 2,1900-05-18,1,12:25:00
+74,1,74,Program (w/music) - Aspire 1 - A,1900-05-18,1,12:45:00
+75,1,75,Program (w/music) - Aspire 1 - B,1900-05-18,1,12:45:00
+76,1,76,Program (w/music) - Aspire 1 - C,1900-05-18,1,13:15:00
+77,1,77,Program (w/music) - Aspire 1 - D,1900-05-18,1,13:15:00
+78,1,78,Program (w/music) - Aspire 1 - E,1900-05-18,1,13:45:00
+79,1,79,Showcase - Character Performance - Preliminary,1900-05-18,1,14:00:00
+80,1,80,Showcase - Character Performance - Intermediate,1900-05-18,1,14:15:00
+80,1,80,Showcase - Character Performance - Open Juvenile,1900-05-18,1,14:15:00
+81,1,81,Showcase Ensembles - Mini-Production,1900-05-18,1,14:30:00
+82,1,82,Showcase Ensembles - Production,1900-05-18,1,14:45:00
+201,1,201,Compulsory Moves - Level 6,1900-05-17,2,08:00:00
+202,1,202,Compulsory Moves - Level 5,1900-05-17,2,08:00:00
+203,1,203,Compulsory Moves - Level 5,1900-05-17,2,08:00:00
+226,1,226,Compete USA Showcase - Lyrical Pop - Pre-Preliminary,1900-05-17,2,11:15:00
+227,1,227,Compete USA Showcase - Lyrical Pop - Aspire 2,1900-05-17,2,11:15:00
+228,1,228,Compete USA Showcase - Lyrical Pop - Aspire 4,1900-05-17,2,11:35:00
+229,1,229,Compete USA Showcase - Lyrical Pop - Aspire 3,1900-05-17,2,11:35:00
+230,1,230,Compete USA Showcase - Emotional Performance - Pre-Preliminary,1900-05-17,2,11:50:00
+231,1,231,Compete USA Showcase - Emotional Performance - Aspire 3,1900-05-17,2,11:50:00
+231,1,231,Compete USA Showcase - Emotional Performance - Aspire 2,1900-05-17,2,11:50:00
+252,1,252,Compete USA Showcase - Character Performance - Aspire 3,1900-05-17,2,14:30:00
+252,1,252,Compete USA Showcase - Character Performance - Aspire 2,1900-05-17,2,14:30:00
+253,1,253,Compete USA Showcase - Character Performance - Aspire 1,1900-05-17,2,14:30:00
+254,1,254,Compete USA Showcase - Character Performance - Pre-Preliminary,1900-05-17,2,14:30:00
+255,1,255,Jumps - Level 5 - A,1900-05-17,2,14:55:00
+256,1,256,Jumps - Level 5 - B,1900-05-17,2,14:55:00
+257,1,257,Jumps - Level 5,1900-05-17,2,14:55:00
+258,1,258,Jumps - Level 6,1900-05-17,2,15:35:00
+288,1,288,Showcase - Emotional Performance - Intermediate,1900-05-17,2,19:20:00
+289,1,289,Showcase - Emotional Performance - Masters,1900-05-17,2,19:20:00
+289,1,289,Showcase - Emotional Performance - Junior,1900-05-17,2,19:20:00
+290,1,290,Showcase - Emotional Performance - Young Adult,1900-05-17,2,19:20:00
+291,1,291,Showcase - Emotional Performance - Adult Bronze,1900-05-17,2,19:40:00
+292,1,292,Showcase - Emotional Performance - Adult Silver,1900-05-17,2,19:40:00
+293,1,293,Compete USA Showcase Duet/Trio - Aspire 1-4,1900-05-17,2,19:55:00
+294,1,294,Showcase Duet/Trios - Juvenile,1900-05-17,2,20:10:00
+294,1,294,Showcase Duet/Trios - Young Adult,1900-05-17,2,20:10:00
+295,1,295,Showcase Duet/Trios - Pre-Juvenile,1900-05-17,2,20:25:00
+295,1,295,Showcase Duet/Trios - Preliminary,1900-05-17,2,20:25:00
+296,1,296,Showcase Duet/Trios - Adult Silver,1900-05-17,2,20:25:00
+303,1,303,Showcase - Emotional Performance - Preliminary,1900-05-18,2,08:45:00
+304,1,304,Showcase - Emotional Performance - Pre-Juvenile,1900-05-18,2,08:45:00
+304,1,304,Showcase - Emotional Performance - Open Juvenile,1900-05-18,2,08:45:00
+305,1,305,Showcase - Comedic Impressions - Intermediate,1900-05-18,2,09:00:00
+306,1,306,Showcase - Comedic Impressions - Adult Bronze,1900-05-18,2,09:00:00
+307,1,307,Showcase - Choreographic Artistry - Juvenile,1900-05-18,2,09:00:00
+307,1,307,Showcase - Choreographic Artistry - Open Juvenile,1900-05-18,2,09:00:00
+308,1,308,Program (w/music) - Snowplow Sam,1900-05-18,2,09:15:00
+309,1,309,Program (w/music) - Basic 2,1900-05-18,2,09:15:00
+310,1,310,Program (w/music) - Basic 3,1900-05-18,2,09:15:00
+311,1,311,Program (w/music) - Basic 4 - A,1900-05-18,2,09:35:00
+312,1,312,Program (w/music) - Basic 4 - B,1900-05-18,2,09:35:00
+313,1,313,Program (w/music) - Basic 5,1900-05-18,2,09:55:00
+314,1,314,Program (w/music) - Basic 6,1900-05-18,2,09:55:00
+315,1,315,Showcase - Character Performance - Adult Bronze,1900-05-18,2,10:20:00
+316,1,316,Showcase - Character Performance - Adult Silver,1900-05-18,2,10:20:00
+317,1,317,Showcase - Character Performance - Novice,1900-05-18,2,10:55:00
+318,1,318,Showcase - Character Performance - Senior Elite/Pro-Am,1900-05-18,2,10:55:00
+318,1,318,Showcase - Character Performance - Junior,1900-05-18,2,10:55:00
+319,1,319,Showcase - Lyrical Pop - Preliminary - A,1900-05-18,2,11:15:00
+320,1,320,Showcase - Lyrical Pop - Preliminary - B,1900-05-18,2,11:30:00
+321,1,321,Showcase - Lyrical Pop - Adult Silver,1900-05-18,2,11:45:00
+322,1,322,Showcase - Lyrical Pop - Young Adult,1900-05-18,2,11:45:00
+322,1,322,Showcase - Lyrical Pop - Novice,1900-05-18,2,11:45:00
+323,1,323,Showcase - Lyrical Pop - Adult Bronze,1900-05-18,2,12:10:00
+324,1,324,Showcase - Lyrical Pop - Intermediate,1900-05-18,2,12:30:00
+325,1,325,Showcase - Lyrical Pop - Juvenile,1900-05-18,2,12:30:00
+325,1,325,Showcase - Lyrical Pop - Open Juvenile,1900-05-18,2,12:30:00
+326,1,326,Showcase - Lyrical Pop - Pre-Juvenile,1900-05-18,2,12:55:00
+327,1,327,Showcase - Interpretive - Pre-Preliminary - A,1900-05-18,2,13:15:00
+328,1,328,Showcase - Interpretive - Pre-Preliminary - B,1900-05-18,2,13:30:00
+329,1,329,Showcase - Interpretive - Pre-Preliminary - C,1900-05-18,2,13:45:00
+330,1,330,Showcase - Interpretive - Pre-Preliminary - D,1900-05-18,2,14:00:00
+331,1,331,Showcase - Interpretive - Preliminary - A,1900-05-18,2,14:15:00
+332,1,332,Showcase - Interpretive - Preliminary - B,1900-05-18,2,14:30:00
+333,1,333,Showcase - Interpretive - Open Juvenile,1900-05-18,2,14:45:00
+333,1,333,Showcase - Interpretive - Pre-Juvenile,1900-05-18,2,14:45:00
+334,1,334,Showcase - Interpretive - Adult Bronze,1900-05-18,2,15:00:00
+335,1,335,Showcase - Interpretive - Masters,1900-05-18,2,15:10:00
