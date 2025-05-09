@@ -25,6 +25,8 @@ class Event(models.Model):
     status      = models.CharField(max_length=10, choices=STATUS_CHOICES, default='scheduled')
     result_image = models.ImageField(upload_to='results/', blank=True, null=True)
     ocr_text    = models.TextField(blank=True, null=True)
+    rink        = models.CharField(max_length=255, null=True)
+    time        = models.CharField(max_length=255, null=True)
 
     class Meta:
         ordering = ['date', 'eventNumber']
@@ -34,7 +36,7 @@ class Event(models.Model):
 
 class Club(models.Model):
     name = models.CharField(max_length=255)
-
+    country = models.CharField(max_length=2, default='US')      # ← new field
     class Meta:
         ordering = ['name']
 
