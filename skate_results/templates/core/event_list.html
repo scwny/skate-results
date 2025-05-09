@@ -83,26 +83,30 @@
   </div>
 {% endif %}
 
+{# after the active‐filter badges but before the <ul> #}
+<div class="mb-2 text-center text-muted">
+  Auto‐refresh in <span id="refresh-timer">90</span>s
+</div>
 <!-- Event List -->
 <ul class="list-group">
   {% for event in events %}
-    <li class="
-           list-group-item
-           d-flex justify-content-between align-items-center
-         "
-         data-event-id="{{ event.pk }}"
-         data-schedule-url="{% url 'event_schedule' event.pk %}"
-         data-results-url="{% url 'event_results' event.pk %}"
-    >
+    {# capture the base URLs #}
+    {% url 'event_schedule' event.pk as sched_url %}
+    {% url 'event_results'  event.pk as res_url %}
+
+    <li class="list-group-item d-flex justify-content-between align-items-center"
+        data-event-id="{{ event.pk }}"
+        data-schedule-url="{{ sched_url }}"
+        data-results-url="{{ res_url }}">
       <div>{{ event.eventNumber }} – {{ event.name }}</div>
       <div class="event-action">
         {% if event.status != 'finished' %}
-          <a href="{% url 'event_schedule' event.pk %}"
+          <a href="{{ sched_url }}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}"
              class="btn btn-primary btn-sm btn-equal">
             Schedule
           </a>
         {% else %}
-          <a href="{% url 'event_results' event.pk %}"
+          <a href="{{ res_url }}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}"
              class="btn btn-success btn-sm btn-equal">
             Results
           </a>
@@ -123,50 +127,69 @@
 
 
 <script>
-  document.addEventListener('DOMContentLoaded', function(){
-    const compPk = {{ competition.pk }};
-    const statusUrl = "{% url 'competition_event_statuses' competition.pk %}";
-  
-    function refreshButtons(){
-      fetch(statusUrl)
-        .then(r => r.json())
-        .then(json => {
-          json.events.forEach(evt => {
-            const li = document.querySelector(`li[data-event-id="${evt.id}"]`);
-            if (!li) return;
-            const actionDiv = li.querySelector('.event-action');
-            const scheduleUrl = li.dataset.scheduleUrl;
-            const resultsUrl  = li.dataset.resultsUrl;
-  
-            // Build new button HTML
-            let html;
-            if (evt.status !== 'finished') {
-              html = `<a href="${scheduleUrl}"
-                         class="btn btn-primary btn-sm btn-equal">
-                        Schedule
-                      </a>`;
-            } else if (evt.has_results) {
-              html = `<a href="${resultsUrl}"
-                         class="btn btn-success btn-sm btn-equal">
-                        Results
-                      </a>`;
-            } else {
-              html = `<a href="${resultsUrl}"
-                         class="btn btn-outline-danger btn-sm btn-equal">
-                        Results
-                      </a>`;
-            }
-            actionDiv.innerHTML = html;
-          });
-        })
-        .catch(console.error);
-    }
-  
-    // Initial load
+document.addEventListener('DOMContentLoaded', function(){
+  const statusUrl       = "{% url 'competition_event_statuses' competition.pk %}";
+  const refreshInterval = 90000;   // 90s
+  let countdown         = refreshInterval / 1000;
+  const timerEl         = document.getElementById('refresh-timer');
+
+  function refreshButtons(){
+    const qs = window.location.search;  // include the leading “?”
+    fetch(statusUrl)
+      .then(r => r.json())
+      .then(json => {
+        json.events.forEach(evt => {
+          const li      = document.querySelector(`li[data-event-id="${evt.id}"]`);
+          if (!li) return;
+          const actionDiv = li.querySelector('.event-action');
+          const schedURL  = li.dataset.scheduleUrl;
+          const resURL    = li.dataset.resultsUrl;
+
+          // Build full hrefs that include your filters
+          const hrefSched = schedURL + qs;
+          const hrefRes   = resURL   + qs;
+
+          let btnHtml;
+          if (evt.status !== 'finished') {
+            btnHtml = `<a href="${hrefSched}"
+                           class="btn btn-primary btn-sm btn-equal">
+                         Schedule
+                       </a>`;
+          } else if (evt.has_results) {
+            btnHtml = `<a href="${hrefRes}"
+                           class="btn btn-success btn-sm btn-equal">
+                         Results
+                       </a>`;
+          } else {
+            btnHtml = `<a href="${hrefRes}"
+                           class="btn btn-outline-danger btn-sm btn-equal">
+                         Results
+                       </a>`;
+          }
+          actionDiv.innerHTML = btnHtml;
+        });
+      })
+      .catch(console.error);
+  }
+
+  function doRefresh(){
     refreshButtons();
-    // Poll every 30 seconds
-    setInterval(refreshButtons, 30000);
-  });
-  </script>
+    countdown = refreshInterval / 1000;
+    if (timerEl) timerEl.textContent = countdown;
+  }
+
+  // countdown ticker
+  setInterval(function(){
+    countdown--;
+    if (countdown <= 0) countdown = refreshInterval / 1000;
+    if (timerEl) timerEl.textContent = countdown;
+  }, 1000);
+
+  // initial run + interval refresh
+  doRefresh();
+  setInterval(doRefresh, refreshInterval);
+});
+</script>
+
   
 {% endblock %}

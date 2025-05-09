@@ -65,7 +65,7 @@ class CompetitionEventListView(ListView):
     model               = Event
     context_object_name = 'events'
     template_name       = 'core/event_list.html'
-    paginate_by         = 25
+    paginate_by         = None
 
     def get_queryset(self):
         qs = (
