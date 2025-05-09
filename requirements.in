@@ -24,4 +24,4 @@ pip-tools>=7.0
 
 Pillow
 
-import_export
+django-import_export
