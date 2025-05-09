@@ -6,11 +6,31 @@
 {% block competition_name %}{{ event }}{% endblock %}
 {% block content %}
 <ul class="list-group">
-  <h3>Skating Order:</h3>
+
+<h4 class="mb-3">
+  {% if event.rink %}
+    Rink: {{ event.rink }}
+  {% endif %}
+  {% if event.time %}
+    {% if event.rink %}&nbsp;&bull;&nbsp;{% endif %}
+    Scheduled Start Time: {{ event.time|date:"g:i A" }}
+  {% endif %}
+</h4>
+
+<h4>Skating Order:</h4>
   {% for ss in scheduled_skaters %}
-    <li class="list-group-item">{{ ss.orderNumber }}. {{ ss.skater }}</li>
+    <li class="list-group-item">
+      {{ ss.orderNumber }}.
+      {% if ss.scratch %}
+        -&nbsp;<strong>SCRATCH</strong>&nbsp;-&nbsp;<del>{{ ss.skater }}</del>
+      {% else %}
+        {{ ss.skater }}
+      {% endif %}
+    </li>
   {% empty %}
-    <li class="list-group-item">No skaters scheduled.</li>
+    <li class="list-group-item text-muted">
+      No skaters scheduled.
+    </li>
   {% endfor %}
 </ul>
 

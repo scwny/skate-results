@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from decouple import config
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from .models import Competition, Event, ScheduledSkater, Skater, Club
 from django.db.models import Q
 import logging
@@ -20,6 +20,9 @@ def ping(request):
 def competitions(request):
     return HttpResponse(f"Competitions")
 
+class LandingPage(TemplateView):
+    context_object_name = 'landing'
+    template_name       = 'core/index.html'
 
 class EventScheduleView(DetailView):
     model               = Event

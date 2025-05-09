@@ -26,8 +26,9 @@ class Event(models.Model):
     result_image = models.ImageField(upload_to='results/', blank=True, null=True)
     ocr_text    = models.TextField(blank=True, null=True)
     rink        = models.CharField(max_length=255, null=True)
-    time        = models.CharField(max_length=255, null=True)
-
+    time        = models.TimeField(blank=True, null=True)
+    enterAt      = models.CharField(max_length=20,blank=True,null=True,help_text="Lobby if suffix ‘L’, Zamboni if suffix ‘Z’")
+                                    
     class Meta:
         ordering = ['date', 'eventNumber']
 
@@ -59,6 +60,7 @@ class ScheduledSkater(models.Model):
     event        = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='event')
     skater       = models.ForeignKey(Skater, on_delete=models.CASCADE, related_name='skater')
     orderNumber  = models.PositiveIntegerField()
+    scratch      = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['orderNumber']

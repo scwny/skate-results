@@ -20,7 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('scwnyonly/', admin.site.urls),
     path('', include('core.urls')),  # Include URLs from the core app
 ]
 

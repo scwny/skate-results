@@ -1,5 +1,9 @@
 from import_export import resources, fields
-from import_export.widgets import ForeignKeyWidget
+from import_export.widgets import (
+    ForeignKeyWidget,
+    DateWidget,
+    TimeWidget
+)
 from .models import Competition, Event, Club, Skater, ScheduledSkater
 
 class CompetitionResource(resources.ModelResource):
@@ -10,27 +14,11 @@ class CompetitionResource(resources.ModelResource):
         skip_unchanged = True
         report_skipped  = True
 
-class EventResource(resources.ModelResource):
-    competition = fields.Field(
-        column_name='competition_id',
-        attribute='competition',
-        widget=ForeignKeyWidget(Competition, 'id')
-    )
-    class Meta:
-        model = Event
-        import_id_fields = ['id']
-        fields = (
-            'id','competition','eventNumber','name',
-            'date','rink','time'
-        )
-        skip_unchanged = True
-        report_skipped  = True
-
 class ClubResource(resources.ModelResource):
     class Meta:
         model = Club
         import_id_fields = ['id']
-        fields = ('id','name','country')
+        fields = ('id','name')
         skip_unchanged = True
         report_skipped  = True
 
@@ -48,7 +36,7 @@ class SkaterResource(resources.ModelResource):
         report_skipped  = True
 
 class ScheduledSkaterResource(resources.ModelResource):
-    event  = fields.Field(
+    event = fields.Field(
         column_name='event_id',
         attribute='event',
         widget=ForeignKeyWidget(Event, 'id')
@@ -58,10 +46,57 @@ class ScheduledSkaterResource(resources.ModelResource):
         attribute='skater',
         widget=ForeignKeyWidget(Skater, 'id')
     )
+    orderNumber = fields.Field(
+        column_name='orderNumber',
+        attribute='orderNumber'
+    )
+    scratch = fields.Field(
+        column_name='scratch',
+        attribute='scratch'
+    )
     class Meta:
         model = ScheduledSkater
-        # we’ll use (event,skater) as our natural key to detect changes
         import_id_fields = ['event','skater']
-        fields = ('event','skater','orderNumber')
+        fields = ('event','skater','orderNumber','scratch')
+        skip_unchanged = True
+        report_skipped  = True
+
+class EventResource(resources.ModelResource):
+    competition = fields.Field(
+        column_name='competition_id',
+        attribute='competition',
+        widget=ForeignKeyWidget(Competition, 'id')
+    )
+    date = fields.Field(
+        column_name='date',
+        attribute='date',
+        widget=DateWidget(format='%Y-%m-%d')
+    )
+    rink = fields.Field(
+        column_name='rink',
+        attribute='rink'
+    )
+    time = fields.Field(
+        column_name='time',
+        attribute='time',
+        widget=TimeWidget(format='%H:%M:%S')
+    )
+    status = fields.Field(
+        column_name='status',
+        attribute='status'
+    )
+    class Meta:
+        model = Event
+        import_id_fields = ['id']
+        fields = (
+            'id',
+            'competition',
+            'eventNumber',
+            'name',
+            'date',
+            'rink',
+            'time',
+            'status',
+        )
         skip_unchanged = True
         report_skipped  = True
