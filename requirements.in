@@ -23,3 +23,5 @@ whitenoise>=6.5
 pip-tools>=7.0
 
 Pillow
+
+import_export
