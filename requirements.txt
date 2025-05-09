@@ -20,10 +20,15 @@ colorama==0.4.6
     # via
     #   build
     #   click
+diff-match-patch==20241021
+    # via django-import-export
 django==4.2.20
     # via
     #   -r requirements.in
+    #   django-import-export
     #   django-storages
+django-import-export==4.3.7
+    # via -r requirements.in
 django-storages==1.14.6
     # via -r requirements.in
 gunicorn==23.0.0
@@ -56,6 +61,8 @@ six==1.17.0
     # via python-dateutil
 sqlparse==0.5.3
     # via django
+tablib==3.8.0
+    # via django-import-export
 tzdata==2025.2
     # via django
 urllib3==1.26.20
