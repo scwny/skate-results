@@ -24,10 +24,10 @@
   </ol>
 {% endif %}
 
-<div class="mb-3" style='margin-top: 25px;'>
-  <a href="{% url 'competition_events' event.competition.pk %}" class="btn btn-secondary">
-    &larr; Back to Events
-  </a>
-</div>
+{% url 'competition_events' event.competition.pk as events_url %}
+<a href="{{ events_url }}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}"
+   class="btn btn-secondary mb-3 mt-1">
+  &larr; Back to Events
+</a>
 
 {% endblock %}

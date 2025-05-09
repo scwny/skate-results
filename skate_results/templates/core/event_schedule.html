@@ -17,7 +17,7 @@
 {# replace your existing Back button with: #}
 {% url 'competition_events' event.competition.pk as events_url %}
 <a href="{{ events_url }}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}"
-   class="btn btn-secondary mb-3">
+   class="btn btn-secondary mb-3" style='margin-top: 25px;'>
   &larr; Back to Events
 </a>
 
