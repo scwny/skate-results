@@ -281,65 +281,61 @@ id,firstName,lastName,club_id
 280,Angelina,Scala,6
 281,Ashley,Vitucci,17
 282,Clarissa,Hren,28
-283,Chicago,,3
+283,,Chicago,3
 284,Barbies Just Want To Have,Fun,19
-285,Broadway,,3
+285,,Broadway,3
 286,Dance Through,Time,6
 287,East Gwillimbury Skating,Club,11
 288,Newmarket,FSC,2
 289,Julia,Norkus,6
 290,Julia,Okorn,2
-291,Olivia,Duco,6
-292,Anna,Hu,12
-293,Mia,Wang,12
-294,Emmett,Gonneau,18
-295,Linden,Maria,7
-296,Rasta,Salehi,2
-297,Katharine,MacPhee,6
-298,Shayleine,Phantharangsy,2
-299,Britton,Coates,4
-300,Aspen,Maria,7
-301,Anca,Ene,22
-302,Roisin,O'Connor,14
-303,Team,Paedyn,6
-304,Team Bradford Emily and,Gabriella,6
-305,Bradford,Girlies,6
-306,Bradford Team Piper and,Alessia,6
-307,Bradford Duets Claire and,Theia,6
-308,Cindy Sabrina and,Anelle,3
-309,Ethan and,Helena,3
-310,Soulja,Boyz,7
-311,THE A,TEAM,2
-312,Bradford,Besties,6
-313,Nobleton Skating,Club,24
-314,Freddy Jo and Ethels love,story,19
-315,Brooklyn,Lawless,7
-316,Harper,Raymond,7
-317,Isabelle,Zacks,12
-318,Clare,Archabald,27
-319,Wesley,Donovan,3
-320,Eleanor,Nowak,7
-321,Victoria,Yue,12
-322,Arielle,Naiberg,12
-323,Iris,Qian,29
-324,Adelaide,See,12
-325,Olivia,Zhao,7
-326,Alimey Rodriguez,Rojas,7
-327,Vivian,Smith,7
-328,Natalie,Wall,27
-329,Isabella,Weber,7
-330,Shay,Fishberg,12
-331,Samantha,Gomolyako,24
-332,Mia,Kirillov,6
-333,Ella,Perel,12
-334,Gianna,Weber,7
-335,Scarlett,Donovan,3
-336,Vivian,Kreutzer,27
-337,Charlotte,Kreutzer,27
-338,Carmen,Mowry,7
-339,Claire,Wen,2
-340,Leo,Zheng,2
-341,Alexis,Darrow,28
-342,Ella,MacPhee,6
-343,Monique,Mara,19
-344,Elisabeth,Gray,11
+291,Britton,Coates,4
+292,Katharine,MacPhee,6
+293,Anca,Ene,22
+294,Roisin,O'Connor,14
+295,Team,Paedyn,6
+296,Team Bradford Emily and,Gabriella,6
+297,Bradford,Girlies,6
+298,Bradford Team Piper and,Alessia,6
+299,Bradford Duets Claire and,Theia,6
+300,Cindy Sabrina and,Anelle,3
+301,Ethan and,Helena,3
+302,Soulja,Boyz,7
+303,THE A,TEAM,2
+304,Bradford,Besties,6
+305,Nobleton Skating,Club,24
+306,Freddy Jo and Ethels love,story,19
+307,Claire,Wen,2
+308,Leo,Zheng,2
+309,Vivian,Kreutzer,27
+310,Charlotte,Kreutzer,27
+311,Carmen,Mowry,7
+312,Shay,Fishberg,12
+313,Samantha,Gomolyako,24
+314,Mia,Kirillov,6
+315,Ella,Perel,12
+316,Gianna,Weber,7
+317,Arielle,Naiberg,12
+318,Iris,Qian,29
+319,Adelaide,See,12
+320,Olivia,Zhao,7
+321,Alimey Rodriguez,Rojas,7
+322,Vivian,Smith,7
+323,Natalie,Wall,27
+324,Isabella,Weber,7
+325,Clare,Archabald,27
+326,Aspen,Maria,7
+327,Linden,Maria,7
+328,Eleanor,Nowak,7
+329,Victoria,Yue,12
+330,Anna,Hu,12
+331,Brooklyn,Lawless,7
+332,Harper,Raymond,7
+333,Mia,Wang,12
+334,Isabelle,Zacks,12
+335,Alexis,Darrow,28
+336,Ella,MacPhee,6
+337,Monique,Mara,19
+338,Elisabeth,Gray,11
+339,Shayleine,Phantharangsy,2
+340,Anna,Barnes,7
