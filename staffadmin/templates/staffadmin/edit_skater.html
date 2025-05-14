@@ -1,0 +1,18 @@
+{% extends "staffadmin/base_staff.html" %}
+{% block title %}Edit Skater{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h4>Edit Skater: {{ skater.firstName }} {{ skater.lastName }}</h4>
+  <form method="post" class="card p-3">
+    {% csrf_token %}
+    {{ skater_form.as_p }}
+    {{ scratch_form.as_p }}
+
+    <div class="d-flex justify-content-between mt-3">
+      <a href="{% url 'staff_dashboard' %}" class="btn btn-secondary">Back</a>
+      <button type="submit" class="btn btn-success">Save</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% block title %}Events – {{ competition.name }}{% endblock %}
+{% block competition_name %}{{ competition.name }}{% endblock %}
+
+{% block content %}
+<style>
+  .btn-equal {
+    /* adjust to whatever width you need */
+    min-width: 100px;
+    width: 100px;
+  }
+</style>
+
+
+<!-- Collapsible Filter Box -->
+<div class="accordion mb-4" id="filterAccordion">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingFilter">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter">
+        Filter Events
+      </button>
+    </h2>
+    <div id="collapseFilter" class="accordion-collapse collapse" aria-labelledby="headingFilter" data-bs-parent="#filterAccordion">
+      <div class="accordion-body">
+        <form method="get" class="row g-3">
+          <div class="col-md-4">
+            <label for="event_name" class="form-label">Event Name</label>
+            <input type="text" id="event_name" name="event_name" class="form-control" value="{{ filters.event_name }}">
+          </div>
+          <div class="col-md-4">
+            <label for="skater_name" class="form-label">Skater Name</label>
+            <input type="text" id="skater_name" name="skater_name" class="form-control" value="{{ filters.skater_name }}">
+          </div>
+          <div class="col-md-4">
+            <label for="club_name" class="form-label">Club Name</label>
+            <select id="club_name" name="club_name" class="form-select">
+              <option value="">(Any Club)</option>
+              {% for name in clubs %}
+                <option value="{{ name }}"{% if filters.club_name == name %} selected{% endif %}>
+                  {{ name }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-12 text-end">
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+            <a href="{% url 'competition_events' competition.pk %}" class="btn btn-outline-secondary">Reset</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if filters.event_name or filters.skater_name or filters.club_name %}
+  <div class="mb-3 d-flex flex-wrap align-items-center gap-2">
+
+    {% if filters.event_name %}
+      <a href="?{% if filters.skater_name %}skater_name={{ filters.skater_name }}&{% endif %}{% if filters.club_name %}club_name={{ filters.club_name }}&{% endif %}"
+         class="badge bg-primary text-decoration-none">
+        Event: {{ filters.event_name }} ✕
+      </a>
+    {% endif %}
+
+    {% if filters.skater_name %}
+      <a href="?{% if filters.event_name %}event_name={{ filters.event_name }}&{% endif %}{% if filters.club_name %}club_name={{ filters.club_name }}&{% endif %}"
+         class="badge bg-primary text-decoration-none">
+        Skater: {{ filters.skater_name }} ✕
+      </a>
+    {% endif %}
+
+    {% if filters.club_name %}
+      <a href="?{% if filters.event_name %}event_name={{ filters.event_name }}&{% endif %}{% if filters.skater_name %}skater_name={{ filters.skater_name }}&{% endif %}"
+         class="badge bg-primary text-decoration-none">
+        Club: {{ filters.club_name }} ✕
+      </a>
+    {% endif %}
+
+    <!-- Clear All Button -->
+    <a href="{% url 'competition_events' competition.pk %}" class="btn btn-sm btn-outline-secondary ms-auto">
+      Clear All Filters
+    </a>
+  </div>
+{% endif %}
+
+{# after the active‐filter badges but before the <ul> #}
+<div class="mb-2 text-center text-muted">
+  Auto‐refresh in <span id="refresh-timer">90</span>s
+</div>
+<!-- Event List -->
+<ul class="list-group">
+  {% for event in events %}
+    {# capture the base URLs #}
+    {% url 'event_schedule' event.pk as sched_url %}
+    {% url 'event_results'  event.pk as res_url %}
+
+    <li class="list-group-item d-flex justify-content-between align-items-center"
+        data-event-id="{{ event.pk }}"
+        data-schedule-url="{{ sched_url }}"
+        data-results-url="{{ res_url }}">
+      <div>{{ event.eventNumber }} – {{ event.name }}</div>
+      <div class="event-action">
+        {% if event.status != 'finished' %}
+          <a href="{{ sched_url }}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}"
+             class="btn btn-primary btn-sm btn-equal">
+            Schedule
+          </a>
+        {% else %}
+          <a href="{{ res_url }}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}"
+             class="btn btn-success btn-sm btn-equal">
+            Results
+          </a>
+        {% endif %}
+      </div>
+    </li>
+  {% empty %}
+    <li class="list-group-item">No events scheduled.</li>
+  {% endfor %}
+</ul>
+
+
+<div class="mb-3" style='margin-top: 25px;'>
+  <a href="{% url 'competition_list' %}" class="btn btn-secondary">
+    &larr; Back to Competitions
+  </a>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const statusUrl       = "{% url 'competition_event_statuses' competition.pk %}";
+  const refreshInterval = 90000;   // 90s
+  let countdown         = refreshInterval / 1000;
+  const timerEl         = document.getElementById('refresh-timer');
+
+  function refreshButtons(){
+    const qs = window.location.search;  // include the leading “?”
+    fetch(statusUrl)
+      .then(r => r.json())
+      .then(json => {
+        json.events.forEach(evt => {
+          const li      = document.querySelector(`li[data-event-id="${evt.id}"]`);
+          if (!li) return;
+          const actionDiv = li.querySelector('.event-action');
+          const schedURL  = li.dataset.scheduleUrl;
+          const resURL    = li.dataset.resultsUrl;
+
+          // Build full hrefs that include your filters
+          const hrefSched = schedURL + qs;
+          const hrefRes   = resURL   + qs;
+
+          let btnHtml;
+          if (evt.status !== 'finished') {
+            btnHtml = `<a href="${hrefSched}"
+                           class="btn btn-primary btn-sm btn-equal">
+                         Schedule
+                       </a>`;
+          } else if (evt.has_results) {
+            btnHtml = `<a href="${hrefRes}"
+                           class="btn btn-success btn-sm btn-equal">
+                         Results
+                       </a>`;
+          } else {
+            btnHtml = `<a href="${hrefRes}"
+                           class="btn btn-outline-danger btn-sm btn-equal">
+                         Results
+                       </a>`;
+          }
+          actionDiv.innerHTML = btnHtml;
+        });
+      })
+      .catch(console.error);
+  }
+
+  function doRefresh(){
+    refreshButtons();
+    countdown = refreshInterval / 1000;
+    if (timerEl) timerEl.textContent = countdown;
+  }
+
+  // countdown ticker
+  setInterval(function(){
+    countdown--;
+    if (countdown <= 0) countdown = refreshInterval / 1000;
+    if (timerEl) timerEl.textContent = countdown;
+  }, 1000);
+
+  // initial run + interval refresh
+  doRefresh();
+  setInterval(doRefresh, refreshInterval);
+});
+</script>
+
+  
+{% endblock %}

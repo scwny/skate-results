@@ -1,0 +1,32 @@
+{% extends "staffadmin/base_staff.html" %}
+{% block title %}Preview Upload – {{ event.name }}{% endblock %}
+
+{% block content %}
+<h3>Compare Uploaded Images</h3>
+
+<div class="row">
+  <div class="col-md-6 text-center">
+    <h5>Original</h5>
+    <img src="{{ original_url }}" class="img-fluid mb-2 border" />
+    <form method="post" action="{% url 'staff_finalize_upload' event.id %}">
+      {% csrf_token %}
+      <input type="hidden" name="choice" value="original">
+      <input type="hidden" name="original_path" value="{{ original_path }}">
+      <input type="hidden" name="processed_path" value="{{ processed_path }}">
+      <button type="submit" class="btn btn-outline-secondary">Use Original</button>
+    </form>
+  </div>
+
+  <div class="col-md-6 text-center">
+    <h5>Processed</h5>
+    <img src="{{ processed_url }}" class="img-fluid mb-2 border" />
+    <form method="post" action="{% url 'staff_finalize_upload' event.id %}">
+      {% csrf_token %}
+      <input type="hidden" name="choice" value="processed">
+      <input type="hidden" name="original_path" value="{{ original_path }}">
+      <input type="hidden" name="processed_path" value="{{ processed_path }}">
+      <button type="submit" class="btn btn-success">Use Processed</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

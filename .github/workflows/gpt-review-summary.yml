@@ -1,0 +1,41 @@
+name: GPT Review Summary
+
+on:
+  push:
+    branches:   [ gpt-review ]
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v3
+        with:
+            fetch-depth: 0  # This disables shallow cloning
+
+      - name: Get changed files and commit message
+        id: meta
+        run: |
+          echo "commit_msg=$(git log -1 --pretty=format:'%s')" >> $GITHUB_OUTPUT
+          echo "timestamp=$(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_OUTPUT
+          git diff --name-only HEAD~1 HEAD > files.txt
+
+      - name: Generate .gptreview-summary file
+        run: |
+          echo "GPT REVIEW SUMMARY" > .gptreview-summary
+          echo "===================" >> .gptreview-summary
+          echo "🕒 Timestamp: ${{ steps.meta.outputs.timestamp }}" >> .gptreview-summary
+          echo "📝 Commit: ${{ steps.meta.outputs.commit_msg }}" >> .gptreview-summary
+          echo "" >> .gptreview-summary
+          echo "🔄 Changed Files:" >> .gptreview-summary
+          cat files.txt >> .gptreview-summary
+
+      - name: Commit summary file
+        run: |
+          git config user.name "gpt-review-bot"
+          git config user.email "gpt-review@local"
+          git add .gptreview-summary
+          git commit -m "Update GPT review summary"
+          git push origin gpt-review
+        continue-on-error: true  # avoid failure if nothing changed

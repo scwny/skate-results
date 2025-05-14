@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}
+  {% if has_results %}Results for{% else %}Schedule for{% endif %} {{ event }}
+{% endblock %}
+{% block competition_name %}{{ event }}{% endblock %}
+{% block content %}
+
+{% if has_results %}
+  <div class="d-flex justify-content-center mb-4">
+    <img src="{{ event.result_image.url }}" class="img-fluid" alt="Results sheet">
+  </div>
+{% else %}
+  <div class="alert alert-info">
+    Results aren’t posted yet. Please check back later!
+  </div>
+
+  <ol class="list-group list-group-numbered mt-3">
+    <h3>Skating Order:</h3>
+    {% for ss in scheduled_skaters %}
+      <li class="list-group-item">{{ ss.skater }}</li>
+    {% empty %}
+      <li class="list-group-item">No skaters scheduled.</li>
+    {% endfor %}
+  </ol>
+{% endif %}
+
+{% url 'competition_events' event.competition.pk as events_url %}
+<a href="{{ events_url }}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}"
+   class="btn btn-secondary mb-3 mt-1">
+  &larr; Back to Events
+</a>
+
+{% endblock %}

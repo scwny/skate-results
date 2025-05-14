@@ -1,0 +1,33 @@
+--- a/ScheduleConversion/generate_csv.py
++++ b/ScheduleConversion/generate_csv.py
+@@ for line in lines:
+-        if line.startswith('#'):
+-            m = re.match(
+-                r'#(\d+)\s*-\s*(.*?)\s{2,}Rink\s+(\d+)(?:\s*-\s*[^ ]+)?\s{2,}(.*)',
+-                line
+-            )
++        if line.startswith('#'):
++            # now capture optional "- L" or "- Z" after the rink number:
++            m = re.match(
++                r'#(\d+)\s*-\s*(.*?)\s{2,}Rink\s+(\d+)(?:\s*-\s*([LZ]))?\s{2,}(.*)',
++                line
++            )
+@@
+-            events.append({
++            # map suffix L/Z → enterAt
++            if suffix == 'L':
++                enterAt = 'Lobby'
++            elif suffix == 'Z':
++                enterAt = 'Zamboni'
++            else:
++                enterAt = ''
++
++            events.append({
+@@
+-                'date':           dt.date(),
+-                'rink':           rink,
+-                'time':           dt.time()
++                'date':           dt.date(),
++                'rink':           rink,
++                'time':           dt.time(),
++                'enterAt':        enterAt,
