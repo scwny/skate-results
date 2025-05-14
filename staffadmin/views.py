@@ -9,7 +9,6 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 import uuid
 
-
 def dashboard(request):
     events = Event.objects.order_by("date", "eventNumber")
     return render(request, "staffadmin/dashboard.html", {"events": events})
@@ -68,24 +67,40 @@ def upload_results(request, event_id):
 
 @csrf_exempt
 def ajax_process_image(request, event_id):
-    if request.method == "POST" and request.FILES.get("image"):
-        original = request.FILES["image"]
-        uid = uuid.uuid4().hex
-        orig_filename = f"temp/{uid}.jpg"
-        cropped_filename = f"temp/{uid}_cropped.jpg"
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
 
-        saved_path = default_storage.save(orig_filename, original)
-        with default_storage.open(saved_path, 'rb') as f:
-            cropped_file = detect_and_crop_document(f)
-            cropped_io = ContentFile(cropped_file.read())
-            default_storage.save(cropped_filename, cropped_io)
+    # accept either 'file' or 'image' as the field name
+    image_file = request.FILES.get('file') or request.FILES.get('image')
+    if not image_file:
+        return JsonResponse({'error': 'No image provided'}, status=400)
 
-        return JsonResponse({
-            "original": default_storage.url(orig_filename),
-            "processed": default_storage.url(cropped_filename),
-            "uid": uid
-        })
-    return JsonResponse({"error": "Invalid request"}, status=400)
+    # generate a unique key
+    uid = uuid.uuid4().hex
+    try:
+        # save original
+        # 1) save the original upload
+        temp_orig_path = f"temp/{uid}.jpg"
+        default_storage.save(temp_orig_path, image_file)
+
+       # 2) open it again and wrap in a file-like stream
+        import io
+        with default_storage.open(temp_orig_path, "rb") as f:
+            img_stream = io.BytesIO(f.read())
+
+        # 3) process & crop document from that stream
+        processed_buf = detect_and_crop_document(img_stream)
+        
+        default_storage.save(f"temp/{uid}_cropped.jpg", processed_buf)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+    # return URLs for both versions
+    return JsonResponse({
+        'uid': uid,
+        'original': default_storage.url(f"temp/{uid}.jpg"),
+        'processed': default_storage.url(f"temp/{uid}_cropped.jpg"),
+    })
 
 
 def skater_list(request):

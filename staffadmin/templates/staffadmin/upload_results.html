@@ -47,35 +47,7 @@
     <input type="hidden" name="selected_image_type" id="selectedImageType">
     <input type="hidden" name="uploaded_key" id="uploadedImageKey">
 
-  <!-- SAVE BUTTON: commits the chosen image+status -->
-  <button type="submit" class="btn btn-success mt-2">
-    Save Changes
-  </button>
-  <a href="{% url 'staff_dashboard' %}" class="btn btn-secondary ml-2 mt-2">
-    Back to Event List
-  </a>
-  </form>
-
-  <!-- Image Preview Section -->
-  <div id="previewContainer" class="mt-4 d-none">
-    <div class="row">
-      <div class="col-md-6 text-center">
-        <h5>Original</h5>
-        <img id="originalPreview" class="img-fluid border mb-2">
-        <button type="button" class="btn btn-outline-secondary" onclick="selectImage('original')">Use Original</button>
-      </div>
-      <div class="col-md-6 text-center">
-        <h5>Processed</h5>
-        <img id="processedPreview" class="img-fluid border mb-2">
-        <button type="button" class="btn btn-success" onclick="selectImage('processed')">Use Processed</button>
-      </div>
-    </div>
-    <div class="mt-3 text-center">
-      <button type="button" class="btn btn-outline-danger" onclick="cancelUpload()">Cancel</button>
-    </div>
-  </div>
-
-  <hr class="my-4">
+    <hr class="my-4">
   <h5>Skaters in This Event</h5>
   <table class="table table-sm table-bordered align-middle">
     <thead>
@@ -101,25 +73,78 @@
       {% endfor %}
     </tbody>
   </table>
+
+  <!-- SAVE BUTTON: commits the chosen image+status -->
+  <button type="submit" class="btn btn-success mt-2">
+    Save Changes
+  </button>
+  <a href="{% url 'staff_dashboard' %}" class="btn btn-secondary ml-2 mt-2">
+    Back to Event List
+  </a>
+  </form>
+
+  <!-- Frost overlay while processing -->
+  <div id="loading-overlay"
+       style="display:none;
+              position:fixed;
+              top:0; left:0;
+              width:100%; height:100%;
+              background:rgba(255,255,255,0.8);
+              z-index:9999;">
+  </div>
+
+ <!-- Image Selection Modal -->
+  <div class="modal fade" id="imageSelectModal" tabindex="-1" aria-labelledby="imageSelectModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="imageSelectModalLabel">Select Image Version</h5>
+          <button type="button" class="btn-close" aria-label="Close" onclick="cancelUpload()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col text-center">
+              <h6>Original</h6>
+              <img id="originalPreviewModal" class="img-fluid border mb-2">
+              <button type="button" class="btn btn-outline-secondary" onclick="selectImage('original')">Use Original</button>
+            </div>
+            <div class="col text-center">
+              <h6>Processed</h6>
+              <img id="processedPreviewModal" class="img-fluid border mb-2">
+              <button type="button" class="btn btn-outline-primary" onclick="selectImage('processed')">Use Processed</button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="cancelUpload()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
 </div>
 
 <script>
+// Frost overlay reference
+const overlay = document.getElementById("loading-overlay");
+
 document.addEventListener("DOMContentLoaded", function() {
   const input               = document.getElementById("imageInput");
-  const previewContainer    = document.getElementById("previewContainer");
-  const originalImg         = document.getElementById("originalPreview");
-  const processedImg        = document.getElementById("processedPreview");
   const selectedTypeInput   = document.getElementById("selectedImageType");
   const uploadedKeyInput    = document.getElementById("uploadedImageKey");
-  const statusSelect        = document.getElementById("id_status");
   const csrfToken           = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
-  // When a file is chosen, upload via AJAX and show previews
+  // When a file is chosen, upload via AJAX and show modal
   input.addEventListener("change", function() {
     const file = this.files[0];
+    if (!file) return;
+
+    // Show frost overlay during processing
+    overlay.style.display = "block";
+
     const formData = new FormData();
-    // match the field name your AJAX view expects
-    formData.append("image", file);
+    formData.append("file", file);
 
     fetch("{% url 'staff_ajax_process_image' event.id %}", {
       method: "POST",
@@ -130,32 +155,53 @@ document.addEventListener("DOMContentLoaded", function() {
     .then(data => {
       if (data.error) {
         alert("Upload failed: " + data.error);
+        overlay.style.display = "none";
         return;
       }
-      // Show preview UI
-      previewContainer.classList.remove("d-none");
-      originalImg.src      = data.original;
-      processedImg.src     = data.processed;
+      // Populate modal previews
+      document.getElementById("originalPreviewModal").src  = data.original;
+      document.getElementById("processedPreviewModal").src = data.processed;
       uploadedKeyInput.value = data.uid;
+      overlay.style.display = "none";
+
+      // Show selection modal (Bootstrap)
+      const modalEl = document.getElementById("imageSelectModal");
+      const bsModal = new bootstrap.Modal(modalEl);
+      bsModal.show();
     })
     .catch(err => {
       alert("Upload failed: " + err.message);
+      overlay.style.display = "none";
     });
   });
 });
 
+/**
+ * Called when user picks a version; does NOT submit form.
+ */
 function selectImage(type) {
-  document.getElementById("selectedImageType").value = type;
-  document.getElementById("id_status").value        = 'finished';
-  document.querySelector("form").submit();
+  const selectedTypeInput = document.getElementById("selectedImageType");
+  selectedTypeInput.value = type;
+  document.getElementById("id_status").value = 'finished';
+  // hide modal & overlay
+  const modalEl = document.getElementById("imageSelectModal");
+  bootstrap.Modal.getInstance(modalEl).hide();
+  overlay.style.display = "none";
 }
 
+/**
+ * Called when user cancels selection.
+ */
 function cancelUpload() {
-  const previewContainer = document.getElementById("previewContainer");
-  previewContainer.classList.add("d-none");
-  document.getElementById("selectedImageType").value = "";
-  document.getElementById("uploadedImageKey").value   = "";
-  document.getElementById("imageInput").value         = null;
+  const selectedTypeInput = document.getElementById("selectedImageType");
+  selectedTypeInput.value = "";
+  const uploadedKeyInput = document.getElementById("uploadedImageKey");
+  uploadedKeyInput.value  = "";
+  document.getElementById("imageInput").value = null;
+  // hide modal & overlay
+  const modalEl = document.getElementById("imageSelectModal");
+  bootstrap.Modal.getInstance(modalEl).hide();
+  overlay.style.display = "none";
 }
 </script>
 
