@@ -14,7 +14,7 @@
     {% endfor %}
   {% endif %}
 
-  <form method="post" enctype="multipart/form-data">
+  <form method="post" enctype="multipart/form-data" action="{% url 'staff_upload_results' event.id %}">
     {% csrf_token %}
 
     <!-- Status dropdown -->
@@ -28,8 +28,32 @@
       <input type="file" id="imageInput" name="image" accept="image/*" class="form-control">
     </div>
 
+    <!-- —————————————————————————————— -->
+    <!-- Event Status dropdown, set from DB -->
+    <div class="form-group">
+      <label for="id_status">Event Status</label>
+      <select name="status" id="id_status" class="form-control">
+        <option value="scheduled"
+          {% if event.status == 'scheduled' %}selected{% endif %}>
+          Scheduled
+        </option>
+        <option value="finished"
+          {% if event.status == 'finished' %}selected{% endif %}>
+          Finished
+        </option>
+      </select>
+    </div>
+
     <input type="hidden" name="selected_image_type" id="selectedImageType">
     <input type="hidden" name="uploaded_key" id="uploadedImageKey">
+
+  <!-- SAVE BUTTON: commits the chosen image+status -->
+  <button type="submit" class="btn btn-success mt-2">
+    Save Changes
+  </button>
+  <a href="{% url 'staff_dashboard' %}" class="btn btn-secondary ml-2 mt-2">
+    Back to Event List
+  </a>
   </form>
 
   <!-- Image Preview Section -->
@@ -80,46 +104,59 @@
 </div>
 
 <script>
-const input = document.getElementById("imageInput");
-const previewContainer = document.getElementById("previewContainer");
-const originalImg = document.getElementById("originalPreview");
-const processedImg = document.getElementById("processedPreview");
-const selectedTypeInput = document.getElementById("selectedImageType");
-const uploadedKeyInput = document.getElementById("uploadedImageKey");
+document.addEventListener("DOMContentLoaded", function() {
+  const input               = document.getElementById("imageInput");
+  const previewContainer    = document.getElementById("previewContainer");
+  const originalImg         = document.getElementById("originalPreview");
+  const processedImg        = document.getElementById("processedPreview");
+  const selectedTypeInput   = document.getElementById("selectedImageType");
+  const uploadedKeyInput    = document.getElementById("uploadedImageKey");
+  const statusSelect        = document.getElementById("id_status");
+  const csrfToken           = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
-input.addEventListener("change", function() {
-  const file = this.files[0];
-  if (!file) return;
+  // When a file is chosen, upload via AJAX and show previews
+  input.addEventListener("change", function() {
+    const file = this.files[0];
+    const formData = new FormData();
+    // match the field name your AJAX view expects
+    formData.append("image", file);
 
-  const formData = new FormData();
-  formData.append("image", file);
-
-  fetch("{% url 'staff_ajax_process_image' event.id %}", {
-    method: "POST",
-    body: formData,
-    headers: { "X-CSRFToken": "{{ csrf_token }}" }
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.error) throw new Error(data.error);
-    previewContainer.classList.remove("d-none");
-    originalImg.src = data.original;
-    processedImg.src = data.processed;
-    uploadedKeyInput.value = data.uid;
-  })
-  .catch(err => alert("Upload failed: " + err.message));
+    fetch("{% url 'staff_ajax_process_image' event.id %}", {
+      method: "POST",
+      headers: { "X-CSRFToken": csrfToken },
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        alert("Upload failed: " + data.error);
+        return;
+      }
+      // Show preview UI
+      previewContainer.classList.remove("d-none");
+      originalImg.src      = data.original;
+      processedImg.src     = data.processed;
+      uploadedKeyInput.value = data.uid;
+    })
+    .catch(err => {
+      alert("Upload failed: " + err.message);
+    });
+  });
 });
 
 function selectImage(type) {
-  selectedTypeInput.value = type;
+  document.getElementById("selectedImageType").value = type;
+  document.getElementById("id_status").value        = 'finished';
   document.querySelector("form").submit();
 }
 
 function cancelUpload() {
+  const previewContainer = document.getElementById("previewContainer");
   previewContainer.classList.add("d-none");
-  selectedTypeInput.value = "";
-  uploadedKeyInput.value = "";
-  input.value = null;
+  document.getElementById("selectedImageType").value = "";
+  document.getElementById("uploadedImageKey").value   = "";
+  document.getElementById("imageInput").value         = null;
 }
 </script>
+
 {% endblock %}
