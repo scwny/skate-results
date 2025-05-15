@@ -16,56 +16,48 @@ def dashboard(request):
 
 def upload_results(request, event_id):
     event   = get_object_or_404(Event, pk=event_id)
+    # grab this once so we can both render and update scratches
     skaters = ScheduledSkater.objects.filter(event=event).select_related('skater__club')
 
     if request.method == "POST":
-        selected_status    = request.POST.get("status", event.status)
-        uid                = request.POST.get("uploaded_key", "")
-        image_type         = request.POST.get("selected_image_type", "")
-        input_method       = request.POST.get("input_method", "upload")
-        error              = False
+        # 0) update scratches
+        for s in skaters:
+            key = f"scratch_{s.id}"
+            new_val = key in request.POST
+            if s.scratch != new_val:
+                s.scratch = new_val
+                s.save()
 
-        # a) File-upload path
-        if input_method == "upload" and uid and image_type:
-            base = f"temp/{uid}"
-            fname = f"{base}_cropped.jpg" if image_type == "processed" else f"{base}.jpg"
-            try:
-                with default_storage.open(fname, "rb") as f:
-                    event.result_image.save(f"results/{uuid.uuid4()}.jpg", f)
-            except Exception as e:
-                messages.error(request, f"Failed to save image: {e}")
-                error = True
+        # 1) persist the chosen image URL (from hidden field or manual URL input)
+        external_url = (
+            request.POST.get("external_image_url", "") or
+            request.POST.get("image_url", "")
+        ).strip()
+        if external_url:
+            event.external_image_url = external_url
+        else:
+            messages.error(request, "Please upload or enter an image URL.")
+            return render(request, "staffadmin/upload_results.html", {
+                "event": event,
+                "form": ResultUploadForm(),
+                "scheduled_skaters": skaters
+            })
 
-        # b) URL path: reuse same field
-        elif input_method == "url":
-            image_url = request.POST.get("image_url", "").strip()
-            if image_url:
-                event.result_image = image_url
-            else:
-                messages.error(request, "Please enter a valid image URL.")
-                error = True
+        # 2) update status
+        selected_status = request.POST.get("status", event.status)
+        if selected_status in dict(Event.STATUS_CHOICES):
+            event.status = selected_status
 
-        # 2) status update (only if no save/url error)
-        if not error:
-            if input_method == "upload" and uid and image_type:
-                event.status = "finished"
-            else:
-                if selected_status in dict(Event.STATUS_CHOICES):
-                    event.status = selected_status
-            try:
-                event.save()
-            except Exception as e:
-                messages.error(request, f"Failed to update event: {e}")
-                error = True
-
-        # 3) on success, show message (stay on page)
-        if not error:
+        try:
+            event.save()
             messages.success(request, "Result saved successfully.")
+        except Exception as e:
+            messages.error(request, f"Failed to save event: {e}")
 
-    form = ResultUploadForm()
+     # stay on the same page after saving
     return render(request, "staffadmin/upload_results.html", {
         "event": event,
-        "form": form,
+        "form": ResultUploadForm(),
         "scheduled_skaters": skaters,
     })
 

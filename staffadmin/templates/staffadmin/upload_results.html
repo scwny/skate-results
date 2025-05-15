@@ -29,7 +29,7 @@
       </label>
       <label>
         <input type="radio" name="input_method" value="url"
-          {% if event.result_image %}checked{% endif %}>
+               {% if event.external_image_url %}checked{% endif %}>
         URL
       </label>
     </div>
@@ -47,14 +47,12 @@
     <!-- URL SECTION -->
     <div id="urlContainer" class="mb-3" style="display:none;">
       <label for="imageUrlInput" class="form-label">Image URL</label>
-      <input type="url"
+    <input type="url"
            id="imageUrlInput"
            name="image_url"
            class="form-control"
            placeholder="https://example.com/image.jpg"
-           {% if event.result_image %}
-             value="{{ event.result_image.url }}"
-           {% endif %}>
+           value="{{ event.external_image_url|default_if_none:'' }}">
     </div>
 
     <!-- Event Status -->
@@ -62,8 +60,18 @@
       {{ form.status.label_tag }} {{ form.status }}
     </div>
 
-    <input type="hidden" name="selected_image_type" id="selectedImageType">
-    <input type="hidden" name="uploaded_key"          id="uploadedImageKey">
+    <!-- new unified hidden field for the image URL -->
+    <input type="hidden" name="external_image_url" id="externalImageUrl">
+
+    {# Current Image: store unified URL #}
+    {% if event.external_image_url %}
+    <div class="mb-3">
+      <strong>Current Image:</strong>
+      <a href="{{ event.external_image_url }}" target="_blank">
+        {{ event.external_image_url }}
+      </a>
+    </div>
+  {% endif %}
 
     <!-- Frost overlay -->
     <div id="loading-overlay"
@@ -126,35 +134,40 @@
       </div>
     </div>
 
-    <hr class="my-4">
-    <h5>Skaters in This Event</h5>
-    <table class="table table-sm table-bordered align-middle">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Name</th>
-          <th>Club</th>
-          <th>Scratch</th>
-          <th>Edit</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for s in scheduled_skaters %}
-        <tr>
-          <td>{{ s.orderNumber }}</td>
-          <td>{{ s.skater.firstName }} {{ s.skater.lastName }}</td>
-          <td>{{ s.skater.club.name }}</td>
-          <td>{% if s.scratch %}<span class="text-danger">Yes</span>{% else %}-{% endif %}</td>
-          <td>
-            <a href="{% url 'staff_edit_skater' s.skater.id s.id %}"
-               class="btn btn-sm btn-outline-secondary">
-              Edit
-            </a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+     <!-- Skaters List with Scratch Checkboxes -->
+  <hr class="my-4">
+  <h5>Skaters in This Event</h5>
+  <table class="table table-sm table-bordered align-middle">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Club</th>
+        <th class="text-center">Scratch</th>
+        <th>Edit</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in scheduled_skaters %}
+      <tr>
+        <td>{{ s.orderNumber }}</td>
+        <td>{{ s.skater.firstName }} {{ s.skater.lastName }}</td>
+        <td>{{ s.skater.club.name }}</td>
+        <td class="text-center">
+          <input type="checkbox"
+                 name="scratch_{{ s.id }}"
+                 {% if s.scratch %}checked{% endif %}>
+        </td>
+        <td>
+          <a href="{% url 'staff_edit_skater' s.skater.id s.id %}"
+             class="btn btn-sm btn-outline-secondary">
+            Edit
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
     <div class="mt-4">
       <button type="submit"
@@ -210,6 +223,7 @@ document.addEventListener("DOMContentLoaded", function() {
       headers: { "X-CSRFToken": csrfToken },
       body: formData
     })
+   
     .then(response => response.json())
     .then(data => {
       if (data.error) {
@@ -217,12 +231,12 @@ document.addEventListener("DOMContentLoaded", function() {
         overlay.style.display = "none";
         return;
       }
-      originalImg.src  = data.original;
-      processedImg.src = data.processed;
-      uploadedKey.value = data.uid;
+      // Populate modal previews
+      originalImg.src   = data.original;
+      processedImg.src  = data.processed;
       overlay.style.display = "none";
-      const bsModal = new bootstrap.Modal(previewModal);
-      bsModal.show();
+      // Show selection modal
+      new bootstrap.Modal(previewModal).show();
     })
     .catch(err => {
       alert("Upload failed: " + err.message);
@@ -233,9 +247,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // called by “Use Original” / “Use Processed” buttons in modal
 function selectImage(type) {
-  const sel = document.getElementById("selectedImageType");
-  if (!sel) return console.error("No #selectedImageType");
-  sel.value = type;
+  // extract the correct preview URL from the modal
+  const url = (type === 'processed')
+    ? document.getElementById("processedPreviewModal").src
+    : document.getElementById("originalPreviewModal").src;
+  document.getElementById("externalImageUrl").value = url;
 
   const statusEl = document.getElementById("id_status");
   if (statusEl) statusEl.value = "finished";
@@ -245,8 +261,8 @@ function selectImage(type) {
 }
 
 function cancelUpload() {
-  document.getElementById("selectedImageType").value = "";
-  document.getElementById("uploadedImageKey").value  = "";
+  // clear the hidden URL if canceling
+  document.getElementById("externalImageUrl").value = "";
   document.getElementById("imageInput").value        = null;
   const modalEl = document.getElementById("imageSelectModal");
   bootstrap.Modal.getInstance(modalEl).hide();

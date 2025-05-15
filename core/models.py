@@ -23,11 +23,11 @@ class Event(models.Model):
     name        = models.CharField(max_length=255)
     date        = models.DateField()
     status      = models.CharField(max_length=10, choices=STATUS_CHOICES, default='scheduled')
-    result_image = models.ImageField(upload_to='results/', blank=True, null=True,max_length=1024)
     ocr_text    = models.TextField(blank=True, null=True)
     rink        = models.CharField(max_length=255, null=True)
     time        = models.TimeField(blank=True, null=True)
-    enterAt      = models.CharField(max_length=20,blank=True,null=True,help_text="Lobby if suffix ‘L’, Zamboni if suffix ‘Z’")
+    enterAt      = models.CharField(max_length=20,blank=True,null=True,help_text="Lobby if suffix ‘L’, Zamboni if suffix ‘Z’") 
+    external_image_url = models.URLField(max_length=255,blank=True,null=True,help_text="External image URL (takes precedence over uploaded image)")
                                     
     class Meta:
         ordering = ['date', 'eventNumber']
