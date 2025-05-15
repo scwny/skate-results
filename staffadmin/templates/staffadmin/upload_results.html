@@ -1,4 +1,4 @@
-{% extends "staffadmin/base_staff.html" %}
+{% extends 'staffadmin/base_staff.html' %}
 {% block title %}Manage Event – {{ event.name }}{% endblock %}
 
 {% block content %}
@@ -14,133 +14,192 @@
     {% endfor %}
   {% endif %}
 
-  <form method="post" enctype="multipart/form-data" action="{% url 'staff_upload_results' event.id %}">
+  <form method="post"
+        enctype="multipart/form-data"
+        action="{% url 'staff_upload_results' event.id %}">
     {% csrf_token %}
 
-    <!-- Status dropdown -->
+    <!-- Image Input Method -->
+    <div class="form-group mb-3">
+      <label>Image Input Method</label><br>
+      <label class="me-3">
+        <input type="radio" name="input_method" value="upload"
+          {% if not event.result_image %}checked{% endif %}>
+        Upload
+      </label>
+      <label>
+        <input type="radio" name="input_method" value="url"
+          {% if event.result_image %}checked{% endif %}>
+        URL
+      </label>
+    </div>
+
+    <!-- UPLOAD SECTION -->
+    <div id="uploadContainer" class="mb-3">
+      <label class="form-label">Upload Image</label>
+      <input type="file"
+             id="imageInput"
+             name="image"
+             accept="image/*"
+             class="form-control">
+    </div>
+
+    <!-- URL SECTION -->
+    <div id="urlContainer" class="mb-3" style="display:none;">
+      <label for="imageUrlInput" class="form-label">Image URL</label>
+      <input type="url"
+           id="imageUrlInput"
+           name="image_url"
+           class="form-control"
+           placeholder="https://example.com/image.jpg"
+           {% if event.result_image %}
+             value="{{ event.result_image.url }}"
+           {% endif %}>
+    </div>
+
+    <!-- Event Status -->
     <div class="mb-3">
       {{ form.status.label_tag }} {{ form.status }}
     </div>
 
-    <!-- Custom file input -->
-    <div class="mb-3">
-      <label class="form-label">Upload Image</label>
-      <input type="file" id="imageInput" name="image" accept="image/*" class="form-control">
-    </div>
-
-    <!-- —————————————————————————————— -->
-    <!-- Event Status dropdown, set from DB -->
-    <div class="form-group">
-      <label for="id_status">Event Status</label>
-      <select name="status" id="id_status" class="form-control">
-        <option value="scheduled"
-          {% if event.status == 'scheduled' %}selected{% endif %}>
-          Scheduled
-        </option>
-        <option value="finished"
-          {% if event.status == 'finished' %}selected{% endif %}>
-          Finished
-        </option>
-      </select>
-    </div>
-
     <input type="hidden" name="selected_image_type" id="selectedImageType">
-    <input type="hidden" name="uploaded_key" id="uploadedImageKey">
+    <input type="hidden" name="uploaded_key"          id="uploadedImageKey">
 
-    <hr class="my-4">
-  <h5>Skaters in This Event</h5>
-  <table class="table table-sm table-bordered align-middle">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Name</th>
-        <th>Club</th>
-        <th>Scratch</th>
-        <th>Edit</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for s in scheduled_skaters %}
-      <tr>
-        <td>{{ s.orderNumber }}</td>
-        <td>{{ s.skater.firstName }} {{ s.skater.lastName }}</td>
-        <td>{{ s.skater.club.name }}</td>
-        <td>{% if s.scratch %}<span class="text-danger">Yes</span>{% else %}-{% endif %}</td>
-        <td>
-          <a href="{% url 'staff_edit_skater' s.skater.id s.id %}" class="btn btn-sm btn-outline-secondary">Edit</a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    <!-- Frost overlay -->
+    <div id="loading-overlay"
+         style="display:none;
+                position:fixed;top:0;left:0;
+                width:100%;height:100%;
+                background:rgba(255,255,255,0.8);
+                z-index:9999;">
+    </div>
 
-  <!-- SAVE BUTTON: commits the chosen image+status -->
-  <button type="submit" class="btn btn-success mt-2">
-    Save Changes
-  </button>
-  <a href="{% url 'staff_dashboard' %}" class="btn btn-secondary ml-2 mt-2">
-    Back to Event List
-  </a>
-  </form>
-
-  <!-- Frost overlay while processing -->
-  <div id="loading-overlay"
-       style="display:none;
-              position:fixed;
-              top:0; left:0;
-              width:100%; height:100%;
-              background:rgba(255,255,255,0.8);
-              z-index:9999;">
-  </div>
-
- <!-- Image Selection Modal -->
-  <div class="modal fade" id="imageSelectModal" tabindex="-1" aria-labelledby="imageSelectModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="imageSelectModalLabel">Select Image Version</h5>
-          <button type="button" class="btn-close" aria-label="Close" onclick="cancelUpload()"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col text-center">
-              <h6>Original</h6>
-              <img id="originalPreviewModal" class="img-fluid border mb-2">
-              <button type="button" class="btn btn-outline-secondary" onclick="selectImage('original')">Use Original</button>
-            </div>
-            <div class="col text-center">
-              <h6>Processed</h6>
-              <img id="processedPreviewModal" class="img-fluid border mb-2">
-              <button type="button" class="btn btn-outline-primary" onclick="selectImage('processed')">Use Processed</button>
+    <!-- Image Selection Modal -->
+    <div class="modal fade"
+         id="imageSelectModal"
+         tabindex="-1"
+         aria-labelledby="imageSelectModalLabel"
+         aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="imageSelectModalLabel">
+              Select Image Version
+            </h5>
+            <button type="button"
+                    class="btn-close"
+                    aria-label="Close"
+                    onclick="cancelUpload()"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col text-center">
+                <h6>Original</h6>
+                <img id="originalPreviewModal"
+                     class="img-fluid border mb-2">
+                <button type="button"
+                        class="btn btn-outline-secondary"
+                        onclick="selectImage('original')">
+                  Use Original
+                </button>
+              </div>
+              <div class="col text-center">
+                <h6>Processed</h6>
+                <img id="processedPreviewModal"
+                     class="img-fluid border mb-2">
+                <button type="button"
+                        class="btn btn-outline-primary"
+                        onclick="selectImage('processed')">
+                  Use Processed
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" onclick="cancelUpload()">Cancel</button>
+          <div class="modal-footer">
+            <button type="button"
+                    class="btn btn-secondary"
+                    onclick="cancelUpload()">
+              Cancel
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  
+    <hr class="my-4">
+    <h5>Skaters in This Event</h5>
+    <table class="table table-sm table-bordered align-middle">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Club</th>
+          <th>Scratch</th>
+          <th>Edit</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in scheduled_skaters %}
+        <tr>
+          <td>{{ s.orderNumber }}</td>
+          <td>{{ s.skater.firstName }} {{ s.skater.lastName }}</td>
+          <td>{{ s.skater.club.name }}</td>
+          <td>{% if s.scratch %}<span class="text-danger">Yes</span>{% else %}-{% endif %}</td>
+          <td>
+            <a href="{% url 'staff_edit_skater' s.skater.id s.id %}"
+               class="btn btn-sm btn-outline-secondary">
+              Edit
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="mt-4">
+      <button type="submit"
+              class="btn btn-success mt-2">
+        Save Changes
+      </button>
+      <a href="{% url 'staff_dashboard' %}"
+         class="btn btn-secondary ml-2 mt-2">
+        Back to Event List
+      </a>
+    </div>
+  </form>
 </div>
 
 <script>
-// Frost overlay reference
-const overlay = document.getElementById("loading-overlay");
-
 document.addEventListener("DOMContentLoaded", function() {
-  const input               = document.getElementById("imageInput");
-  const selectedTypeInput   = document.getElementById("selectedImageType");
-  const uploadedKeyInput    = document.getElementById("uploadedImageKey");
-  const csrfToken           = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+  const uploadRadio   = document.querySelector('input[name="input_method"][value="upload"]');
+  const urlRadio      = document.querySelector('input[name="input_method"][value="url"]');
+  const uploadEl      = document.getElementById("uploadContainer");
+  const urlEl         = document.getElementById("urlContainer");
+  const overlay       = document.getElementById("loading-overlay");
+  const input         = document.getElementById("imageInput");
+  const previewModal  = document.getElementById("imageSelectModal");
+  const originalImg   = document.getElementById("originalPreviewModal");
+  const processedImg  = document.getElementById("processedPreviewModal");
+  const selectedType  = document.getElementById("selectedImageType");
+  const uploadedKey   = document.getElementById("uploadedImageKey");
+  const csrfToken     = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
-  // When a file is chosen, upload via AJAX and show modal
+  function toggleInputMode() {
+    if (urlRadio.checked) {
+      uploadEl.style.display = "none";
+      urlEl.style.display    = "block";
+    } else {
+      uploadEl.style.display = "block";
+      urlEl.style.display    = "none";
+    }
+  }
+  uploadRadio.addEventListener("change", toggleInputMode);
+  urlRadio.addEventListener("change", toggleInputMode);
+  toggleInputMode();
+
   input.addEventListener("change", function() {
     const file = this.files[0];
     if (!file) return;
-
-    // Show frost overlay during processing
     overlay.style.display = "block";
 
     const formData = new FormData();
@@ -158,15 +217,11 @@ document.addEventListener("DOMContentLoaded", function() {
         overlay.style.display = "none";
         return;
       }
-      // Populate modal previews
-      document.getElementById("originalPreviewModal").src  = data.original;
-      document.getElementById("processedPreviewModal").src = data.processed;
-      uploadedKeyInput.value = data.uid;
+      originalImg.src  = data.original;
+      processedImg.src = data.processed;
+      uploadedKey.value = data.uid;
       overlay.style.display = "none";
-
-      // Show selection modal (Bootstrap)
-      const modalEl = document.getElementById("imageSelectModal");
-      const bsModal = new bootstrap.Modal(modalEl);
+      const bsModal = new bootstrap.Modal(previewModal);
       bsModal.show();
     })
     .catch(err => {
@@ -176,33 +231,26 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 
-/**
- * Called when user picks a version; does NOT submit form.
- */
+// called by “Use Original” / “Use Processed” buttons in modal
 function selectImage(type) {
-  const selectedTypeInput = document.getElementById("selectedImageType");
-  selectedTypeInput.value = type;
-  document.getElementById("id_status").value = 'finished';
-  // hide modal & overlay
+  const sel = document.getElementById("selectedImageType");
+  if (!sel) return console.error("No #selectedImageType");
+  sel.value = type;
+
+  const statusEl = document.getElementById("id_status");
+  if (statusEl) statusEl.value = "finished";
+
   const modalEl = document.getElementById("imageSelectModal");
   bootstrap.Modal.getInstance(modalEl).hide();
-  overlay.style.display = "none";
 }
 
-/**
- * Called when user cancels selection.
- */
 function cancelUpload() {
-  const selectedTypeInput = document.getElementById("selectedImageType");
-  selectedTypeInput.value = "";
-  const uploadedKeyInput = document.getElementById("uploadedImageKey");
-  uploadedKeyInput.value  = "";
-  document.getElementById("imageInput").value = null;
-  // hide modal & overlay
+  document.getElementById("selectedImageType").value = "";
+  document.getElementById("uploadedImageKey").value  = "";
+  document.getElementById("imageInput").value        = null;
   const modalEl = document.getElementById("imageSelectModal");
   bootstrap.Modal.getInstance(modalEl).hide();
-  overlay.style.display = "none";
+  document.getElementById("loading-overlay").style.display = "none";
 }
 </script>
-
 {% endblock %}

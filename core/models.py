@@ -23,7 +23,7 @@ class Event(models.Model):
     name        = models.CharField(max_length=255)
     date        = models.DateField()
     status      = models.CharField(max_length=10, choices=STATUS_CHOICES, default='scheduled')
-    result_image = models.ImageField(upload_to='results/', blank=True, null=True)
+    result_image = models.ImageField(upload_to='results/', blank=True, null=True,max_length=1024)
     ocr_text    = models.TextField(blank=True, null=True)
     rink        = models.CharField(max_length=255, null=True)
     time        = models.TimeField(blank=True, null=True)

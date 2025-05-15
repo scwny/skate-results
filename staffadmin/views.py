@@ -19,14 +19,14 @@ def upload_results(request, event_id):
     skaters = ScheduledSkater.objects.filter(event=event).select_related('skater__club')
 
     if request.method == "POST":
-        # 1) gather inputs
-        selected_status = request.POST.get("status", event.status)
-        uid             = request.POST.get("uploaded_key", "")
-        image_type      = request.POST.get("selected_image_type", "")
-        error           = False
+        selected_status    = request.POST.get("status", event.status)
+        uid                = request.POST.get("uploaded_key", "")
+        image_type         = request.POST.get("selected_image_type", "")
+        input_method       = request.POST.get("input_method", "upload")
+        error              = False
 
-        # 2) if they picked an image in the modal, save it
-        if uid and image_type:
+        # a) File-upload path
+        if input_method == "upload" and uid and image_type:
             base = f"temp/{uid}"
             fname = f"{base}_cropped.jpg" if image_type == "processed" else f"{base}.jpg"
             try:
@@ -36,34 +36,38 @@ def upload_results(request, event_id):
                 messages.error(request, f"Failed to save image: {e}")
                 error = True
 
-        # 3) only update status if no image‐save error
+        # b) URL path: reuse same field
+        elif input_method == "url":
+            image_url = request.POST.get("image_url", "").strip()
+            if image_url:
+                event.result_image = image_url
+            else:
+                messages.error(request, "Please enter a valid image URL.")
+                error = True
+
+        # 2) status update (only if no save/url error)
         if not error:
-            if uid and image_type:
+            if input_method == "upload" and uid and image_type:
                 event.status = "finished"
             else:
-                # ensure it's one of your defined choices
                 if selected_status in dict(Event.STATUS_CHOICES):
                     event.status = selected_status
-
             try:
                 event.save()
             except Exception as e:
                 messages.error(request, f"Failed to update event: {e}")
                 error = True
 
-        # 4) on total success, go back to /staff with a message
+        # 3) on success, show message (stay on page)
         if not error:
             messages.success(request, "Result saved successfully.")
-            #return redirect("staff_dashboard")
 
-    # either GET or POST-with-error: show the form again
     form = ResultUploadForm()
     return render(request, "staffadmin/upload_results.html", {
         "event": event,
         "form": form,
-        "scheduled_skaters": skaters
+        "scheduled_skaters": skaters,
     })
-
 
 @csrf_exempt
 def ajax_process_image(request, event_id):
