@@ -54,8 +54,8 @@ class EventResultsView(DetailView):
             .order_by('orderNumber')
         )
 
-        # only show image if finished and has one
-        ctx['has_results'] = bool(self.object.status == 'finished' and self.object.result_image)
+        # only show image if finished and has one+        
+        ctx['has_results'] = bool(self.object.status == 'finished'and self.object.external_image_url)        
         return ctx
 
 class CompetitionListView(ListView):
@@ -124,6 +124,6 @@ def competition_event_statuses(request, pk):
         data.append({
             'id': e.pk,
             'status': e.status,
-            'has_results': bool(e.status == 'finished' and e.result_image),
+            'has_results': bool(e.status == 'finished'  and e.external_image_url),
         })
     return JsonResponse({'events': data})

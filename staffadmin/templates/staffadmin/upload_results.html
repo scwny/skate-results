@@ -24,7 +24,7 @@
       <label>Image Input Method</label><br>
       <label class="me-3">
         <input type="radio" name="input_method" value="upload"
-          {% if not event.result_image %}checked{% endif %}>
+          {% if not event.external_image_url  %}checked{% endif %}>
         Upload
       </label>
       <label>
