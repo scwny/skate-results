@@ -1,0 +1,46 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# Version control / CI
+.git/
+.gitignore
+.github/
+.travis.yml
+
+# Python cache & bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtualenvs & local env files
+venv/
+env/
+ENV/
+.env
+.env.*
+
+# Local SQLite DB (you’re using RDS in prod)
+db.sqlite3
+
+# Logs
+*.log
+
+# Editor/IDE metadata
+.vscode/
+.idea/
+*.sublime-*
+*.sw?
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Tests (not needed at runtime)
+tests/
+core/tests/
+skate_results/tests/
+staffadmin/tests/
+
+# Ancillary data & reference files
+ScheduleConversion/
+
+# Don’t ignore these! your Procfile, requirements.txt, manage.py, migrations, static/, etc.
+# ──────────────────────────────────────────────────────────────────────────────
