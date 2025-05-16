@@ -8,6 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
+      HF_HUB_TOKEN:          ${{ secrets.HF_HUB_TOKEN }}
       DJANGO_ENV:            ${{ secrets.DJANGO_ENV }}
       SQL_ENGINE:            ${{ secrets.SQL_ENGINE }}
       SQL_DBNAME:            ${{ secrets.SQL_DBNAME }}

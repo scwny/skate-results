@@ -3,11 +3,14 @@ import numpy as np
 from django.core.files.base import ContentFile
 from huggingface_hub import hf_hub_download
 from doclayout_yolo import YOLOv10
+import os
 
 # Load pretrained YOLO document layout model
+hf_token = os.getenv("HF_HUB_TOKEN", None)
 model_path = hf_hub_download(
     repo_id="juliozhao/DocLayout-YOLO-DocStructBench",
-    filename="doclayout_yolo_docstructbench_imgsz1024.pt"
+    filename="doclayout_yolo_docstructbench_imgsz1024.pt",
+    token=hf_token
 )
 model = YOLOv10(model_path)
 
