@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from decouple import config
 import os
+from django.contrib.messages import constants as messages
 
 # Load .env file explicitly if needed
 #config = Config(repository=RepositoryEnv('.env'))
@@ -46,6 +47,10 @@ DEBUG = True
 ALLOWED_HOSTS = ['skate-results-app.azurewebsites.net', '127.0.0.1', 'mayskateresults.scwny.org',".elasticbeanstalk.com",".mayskate.org"]
 
 
+MESSAGE_TAGS = {
+    messages.SUCCESS: 'success',
+    messages.ERROR: 'danger',
+}
 # Application definition
 
 INSTALLED_APPS = [
@@ -57,6 +62,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'import_export',
     'core',
+    'staffadmin',
 ]
 
 MIDDLEWARE = [
@@ -167,3 +173,4 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOGOUT_REDIRECT_URL = '/'

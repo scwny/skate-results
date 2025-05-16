@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import CompetitionListView, CompetitionEventListView, EventScheduleView, ping, EventResultsView, competition_event_statuses, LandingPage
 
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('ping', ping, name='Ping'),
@@ -21,4 +22,6 @@ urlpatterns = [
 
     # 5) Event Results
     path('competition/<int:pk>/statuses/',competition_event_statuses,name='competition_event_statuses'),
+
+
 ]
