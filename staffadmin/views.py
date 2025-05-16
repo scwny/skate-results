@@ -27,21 +27,13 @@ def upload_results(request, event_id):
             if s.scratch != new_val:
                 s.scratch = new_val
                 s.save()
-
-        # 1) persist the chosen image URL (from hidden field or manual URL input)
+        # 1) persist the chosen image URL (allow blank → null)
         external_url = (
             request.POST.get("external_image_url", "") or
             request.POST.get("image_url", "")
         ).strip()
-        if external_url:
-            event.external_image_url = external_url
-        else:
-            messages.error(request, "Please upload or enter an image URL.")
-            return render(request, "staffadmin/upload_results.html", {
-                "event": event,
-                "form": ResultUploadForm(),
-                "scheduled_skaters": skaters
-            })
+        event.external_image_url = external_url or None
+
 
         # 2) update status
         selected_status = request.POST.get("status", event.status)
