@@ -1,2 +1,13 @@
 {% extends 'base.html' %}
-{% block competition_name %}Welcome to May Skate{% endblock %}
+{% load static %}
+{% block competition_name %}34th Annual Spring Skate Festival{% endblock %}
+{% block content%}
+<div style="text-align: center; margin: 2rem 0;">
+  <h2>Thank you to our gold sponsors!</h2>
+  <img 
+    src="{% static 'images/GOLD_Sponsors.jpg' %}" 
+    alt="Gold Sponsors" 
+    style="max-width: 100%; height: auto; margin-top: 1rem;"
+  />
+</div>
+{% endblock%}
