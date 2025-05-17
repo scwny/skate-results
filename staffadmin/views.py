@@ -9,11 +9,14 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 import uuid
 
+from django.contrib.auth.decorators import login_required
+
+@login_required
 def dashboard(request):
     events = Event.objects.order_by("date", "eventNumber")
     return render(request, "staffadmin/dashboard.html", {"events": events})
 
-
+@login_required
 def upload_results(request, event_id):
     event   = get_object_or_404(Event, pk=event_id)
     # grab this once so we can both render and update scratches
