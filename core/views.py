@@ -73,7 +73,7 @@ class CompetitionEventListView(ListView):
     def get_queryset(self):
         qs = (
             Event.objects
-            .filter(competition_id=self.kwargs['pk'])
+            .filter(competition_id=self.kwargs['pk'],display=True)
             .prefetch_related(
             'event__skater__club'
             )

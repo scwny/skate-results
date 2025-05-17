@@ -16,8 +16,9 @@ class ScheduledSkaterInline(admin.TabularInline):
 @admin.register(Event)
 class EventAdmin(ImportExportModelAdmin):
     resource_class = EventResource
-    list_display  = ('name', 'date', 'status')
+    list_display  = ('name', 'date', 'status', 'display')
     list_filter   = ('status', 'date')
+    list_editable = ('display',)
     inlines       = [ScheduledSkaterInline]
 
 @admin.register(Competition)

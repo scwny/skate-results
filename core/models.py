@@ -28,6 +28,7 @@ class Event(models.Model):
     time        = models.TimeField(blank=True, null=True)
     enterAt      = models.CharField(max_length=20,blank=True,null=True,help_text="Lobby if suffix ‘L’, Zamboni if suffix ‘Z’") 
     external_image_url = models.URLField(max_length=255,blank=True,null=True,help_text="External image URL (takes precedence over uploaded image)")
+    display = models.BooleanField(default=False,help_text="Whether this event should be shown in listings")
                                     
     class Meta:
         ordering = ['date', 'eventNumber']
