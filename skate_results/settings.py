@@ -65,7 +65,6 @@ INSTALLED_APPS = [
     'import_export',
     'core',
     'staffadmin',
-    "storages"
 ]
 
 MIDDLEWARE = [
