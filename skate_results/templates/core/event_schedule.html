@@ -16,8 +16,8 @@
     Scheduled Start Time: {{ event.time|date:"g:i A" }}
   {% endif %}
 </h4>
-
-<h4>Skating Order:</h4>
+<h2>These may not represent the official starting order, please check with the convener on your rink.</h2>
+<h4>Skaters in this event:</h4>
   {% for ss in scheduled_skaters %}
     <li class="list-group-item">
       {{ ss.orderNumber }}.
