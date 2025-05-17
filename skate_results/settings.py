@@ -44,8 +44,9 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['skate-results-app.azurewebsites.net', '127.0.0.1', 'mayskateresults.scwny.org',".elasticbeanstalk.com",".mayskate.org"]
-CSRF_TRUSTED_ORIGINS = ['skate-results-app.azurewebsites.net', 'mayskateresults.scwny.org',".elasticbeanstalk.com","mayskate.org", "www.mayskate.org"]
+ALLOWED_HOSTS = ['skate-results-app.azurewebsites.net', '127.0.0.1', 'mayskateresults.scwny.org',".elasticbeanstalk.com","mayskate.org", "www.mayskate.org"]
+CSRF_TRUSTED_ORIGINS = ["https://mayskate.org", "https://www.mayskate.org"]
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 MESSAGE_TAGS = {
     messages.SUCCESS: 'success',
