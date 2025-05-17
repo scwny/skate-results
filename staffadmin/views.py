@@ -17,8 +17,31 @@ def dashboard(request):
 def upload_results(request, event_id):
     event   = get_object_or_404(Event, pk=event_id)
     # grab this once so we can both render and update scratches
-    skaters = ScheduledSkater.objects.filter(event=event).select_related('skater__club')
+    #skaters = ScheduledSkater.objects.filter(event=event).select_related('skater__club')
+   # Always fetch skaters in ascending orderNumber
+    skaters = (
+        ScheduledSkater.objects
+        .filter(event=event)
+        .select_related('skater__club')
+        .order_by('orderNumber')
+    )
 
+    # --- New code: find previous/next events ---
+    # Prev = max eventNumber < this one
+    previous_event = (
+        Event.objects
+             .filter(eventNumber__lt=event.eventNumber)
+             .order_by('-eventNumber')
+             .first()
+    )
+    # Next = min eventNumber > this one
+    next_event = (
+        Event.objects
+             .filter(eventNumber__gt=event.eventNumber)
+             .order_by('eventNumber')
+             .first()
+    )
+    
     if request.method == "POST":
         # 0) update scratches
         for s in skaters:
@@ -27,6 +50,20 @@ def upload_results(request, event_id):
             if s.scratch != new_val:
                 s.scratch = new_val
                 s.save()
+
+        # 1) update orderNumber from editable textbox
+        for s in skaters:
+            field = f'order_{s.id}'
+            new_order = request.POST.get(field)
+            if new_order is not None:
+                try:
+                    ord_int = int(new_order)
+                except ValueError:
+                    ord_int = s.orderNumber  # fallback on bad input
+                if ord_int != s.orderNumber:
+                    s.orderNumber = ord_int
+                    s.save(update_fields=['orderNumber'])
+
         # 1) persist the chosen image URL (allow blank → null)
         external_url = (
             request.POST.get("external_image_url", "") or
@@ -40,8 +77,17 @@ def upload_results(request, event_id):
         if selected_status in dict(Event.STATUS_CHOICES):
             event.status = selected_status
 
+
+        event.display = 'display' in request.POST
+
         try:
             event.save()
+            skaters = (
+                ScheduledSkater.objects
+                .filter(event=event)
+                .select_related('skater__club')
+                .order_by('orderNumber')
+            )
             messages.success(request, "Result saved successfully.")
         except Exception as e:
             messages.error(request, f"Failed to save event: {e}")
@@ -51,6 +97,8 @@ def upload_results(request, event_id):
         "event": event,
         "form": ResultUploadForm(),
         "scheduled_skaters": skaters,
+        "previous_event": previous_event,
+        "next_event": next_event,
     })
 
 @csrf_exempt
